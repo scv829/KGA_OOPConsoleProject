@@ -47,7 +47,8 @@ namespace GeometryFarm.Scenes
             switch (input)
             {
                 case "1":
-                    Console.WriteLine("게임 시작");
+                    Console.Clear();
+                    game.ChangeScene(SceneType.Farm);
                     break;
                 case "2":
                     Console.WriteLine("게임 종료");

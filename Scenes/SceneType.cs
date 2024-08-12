@@ -8,6 +8,6 @@ namespace GeometryFarm.Scenes
 {
     public enum SceneType
     {
-        Main, SIZE
+        Main, Farm, SIZE
     }
 }
