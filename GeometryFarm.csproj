@@ -8,8 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Geometry\" />
-    <Folder Include="Item\" />
+    <Compile Remove="Items\ItemType.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Items\ItemType.cs" />
   </ItemGroup>
 
 </Project>

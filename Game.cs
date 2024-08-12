@@ -13,6 +13,8 @@ namespace GeometryFarm
         private Scene[] scenes;
         private Scene currntScene;
 
+        private Player player;
+
         public void Run()
         {
             Start();
@@ -25,6 +27,13 @@ namespace GeometryFarm
             End();
         }
 
+        public void ChangeScene(SceneType sceneType)
+        {
+            currntScene.Exit();
+            currntScene = scenes[(int)sceneType];
+            currntScene.Enter();
+        }
+
         public void Over()
         {
             isRunning = false;
@@ -34,9 +43,12 @@ namespace GeometryFarm
         {
             isRunning = true;
 
+            player = new Player("테스트");
+
             scenes = new Scene[(int)SceneType.SIZE];
             
             scenes[(int)SceneType.Main] = new MainScene(this);
+            scenes[(int)SceneType.Farm] = new FarmScene(this);
             
             currntScene = scenes[(int)SceneType.Main];
 
