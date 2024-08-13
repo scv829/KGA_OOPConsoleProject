@@ -19,9 +19,10 @@ namespace GeometryFarm.Enums
     /// Field = 밭
     /// Crop = 농작물
     /// Seed = 씨앗
+    /// Portal = 맵 이동
     /// </summary>
     public enum MapTileType
     {
-        Ground, Fence, Field, Crop, Seed
+        Ground, Fence, Field, Crop, Seed, Portal
     }
 }

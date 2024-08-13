@@ -1,5 +1,6 @@
 ﻿using GeometryFarm.Enums;
 using GeometryFarm.Util;
+using System.Net.Security;
 using System.Text;
 
 namespace GeometryFarm.Scenes
@@ -20,7 +21,7 @@ namespace GeometryFarm.Scenes
             map = new int[6, 6]
                 {
                     {1, 1, 1, 1, 1 ,1 },
-                    {1, 0, 0, 0, 0, 1 },
+                    {5, 0, 0, 0, 0, 1 },
                     {1, 0, 0, 0, 0, 1 },
                     {1, 2, 0, 0, 4, 1 },
                     {1, 0, 0, 3, 0, 1 },
@@ -33,17 +34,16 @@ namespace GeometryFarm.Scenes
 
         public override void Enter()
         {
-
+            
         }
 
         public override void Exit()
         {
-
+            Console.Clear();
         }
 
         public override void Input()
         {
-            // 키를 입력 받으면
             input = Console.ReadKey().Key;
         }
 
@@ -78,6 +78,11 @@ namespace GeometryFarm.Scenes
                             break;
                         case MapTileType.Seed:
                             Console.Write($"S");
+                            break;
+                        case MapTileType.Portal:
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.Write($"@");
+                            Console.ResetColor();
                             break;
                     }
                 }
@@ -142,19 +147,27 @@ namespace GeometryFarm.Scenes
                     sb.Append(game.Player.Interection((MapTileType)map[game.Player.GetPos().y, game.Player.GetPos().x]));
                     break;
             }
+
+            CheckPlayerPos();
         }
 
         private void Move(int x, int y)
         {
             Pos playerPos = game.Player.GetPos();
-            if (playerPos.x + x > 0 &&
-                playerPos.x + x < map.GetLength(1) - 1 &&
-                playerPos.y + y > 0 &&
-                playerPos.y + y < map.GetLength(0) - 1
-                )
+
+            if (map[playerPos.y + y, playerPos.x + x] != 1)
             {
                 game.Player.SetPos(playerPos.x + x, playerPos.y + y);
             }
+        }
+
+        private void CheckPlayerPos()
+        {
+            if ((MapTileType)map[game.Player.GetPos().y, game.Player.GetPos().x] == MapTileType.Portal)
+            {
+                game.ChangeScene(SceneType.Main);
+            }
+
         }
 
     }
