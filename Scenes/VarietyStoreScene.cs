@@ -1,35 +1,31 @@
 ﻿using GeometryFarm.Enums;
 using GeometryFarm.Util;
-using System.Net.Security;
 using System.Text;
 
 namespace GeometryFarm.Scenes
 {
-    public class FarmScene : Scene
+    public class VarietyStoreScene : Scene
     {
-        private int[,] map;
+        int[,] map;
         private ConsoleKey input;
 
         // 테스트 용 sb
         private StringBuilder sb;
 
-        public FarmScene(Game game) : base(game)
+        public VarietyStoreScene(Game game) : base(game)
         {
             sb = new StringBuilder();
-
-            Console.CursorVisible = false;
-            map = new int[6, 6]
+            map = new int[7, 15]
                 {
-                    {1, 1, 1, 1, 1 ,1 },
-                    {1, 0, 0, 0, 0, 5 },
-                    {1, 0, 0, 0, 0, 1 },
-                    {1, 2, 0, 0, 4, 1 },
-                    {1, 0, 0, 3, 0, 1 },
-                    {1, 1, 1, 1, 1, 1 },
+                    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                    { 1, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                    { 1, 0, 3, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                    { 1, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                    { 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
                 };
 
-            // 임시로 위치를 설정
-            game.Player.SetPos(2, 2);
         }
 
         public override void Enter()
@@ -61,25 +57,24 @@ namespace GeometryFarm.Scenes
             {
                 for (int x = 0; x < map.GetLength(1); x++)
                 {
-                    switch ((FarmTileType)map[y, x])
+                    switch ((ShopTileType)map[y, x])
                     {
-                        case FarmTileType.Ground:
+                        case ShopTileType.Ground:
                             Console.Write($" ");
                             break;
-                        case FarmTileType.Fence:
+                        case ShopTileType.Block:
                             Console.Write($"#");
                             //PrintFence(x, y);
                             break;
-                        case FarmTileType.Field:
-                            Console.Write($"F");
+                        case ShopTileType.Shopkeeper:
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.Write($"K");
+                            Console.ResetColor();
                             break;
-                        case FarmTileType.Crop:
-                            Console.Write($"C");
+                        case ShopTileType.InterectionPlace:
+                            Console.Write($" ");
                             break;
-                        case FarmTileType.Seed:
-                            Console.Write($"S");
-                            break;
-                        case FarmTileType.Portal:
+                        case ShopTileType.Portal:
                             Console.ForegroundColor = ConsoleColor.Blue;
                             Console.Write($"@");
                             Console.ResetColor();
@@ -144,7 +139,7 @@ namespace GeometryFarm.Scenes
                     break;
                 case ConsoleKey.E:
                     sb.Clear();
-                    sb.Append(game.Player.Interection((FarmTileType)map[game.Player.GetPos().y, game.Player.GetPos().x]));
+                    sb.Append(game.Player.Interection((ShopTileType)map[game.Player.GetPos().y, game.Player.GetPos().x]));
                     break;
             }
 
@@ -155,7 +150,8 @@ namespace GeometryFarm.Scenes
         {
             Pos playerPos = game.Player.GetPos();
 
-            if (map[playerPos.y + y, playerPos.x + x] != 1)
+            if ((ShopTileType)map[playerPos.y + y, playerPos.x + x] != ShopTileType.Shopkeeper &&
+                (ShopTileType)map[playerPos.y + y, playerPos.x + x] != ShopTileType.Block)
             {
                 game.Player.SetPos(playerPos.x + x, playerPos.y + y);
             }
@@ -163,13 +159,11 @@ namespace GeometryFarm.Scenes
 
         private void CheckPlayerPos()
         {
-            if ((FarmTileType)map[game.Player.GetPos().y, game.Player.GetPos().x] == FarmTileType.Portal)
+            if ((ShopTileType)map[game.Player.GetPos().y, game.Player.GetPos().x] == ShopTileType.Portal)
             {
-                game.ChangeScene(SceneType.VarietyStore);
-                game.Player.SetPos(3, 5);
+                game.ChangeScene(SceneType.Farm);
+                game.Player.SetPos(4, 1);
             }
-
         }
-
     }
 }

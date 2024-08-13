@@ -4,7 +4,7 @@ namespace GeometryFarm.Enums
 {
     public enum SceneType
     {
-        Main, Farm, SIZE
+        Main, Farm, VarietyStore, SIZE
     }
 
     public enum ItemType
@@ -13,7 +13,7 @@ namespace GeometryFarm.Enums
     }
 
     /// <summary>
-    /// 맵 타일 타입
+    /// 농장맵 타일 타입
     /// Ground = 땅
     /// Fence = 울타리
     /// Field = 밭
@@ -21,8 +21,13 @@ namespace GeometryFarm.Enums
     /// Seed = 씨앗
     /// Portal = 맵 이동
     /// </summary>
-    public enum MapTileType
+    public enum FarmTileType
     {
         Ground, Fence, Field, Crop, Seed, Portal
+    }
+
+    public enum ShopTileType
+    {
+        Ground, Block, Shopkeeper, InterectionPlace, Portal = 5
     }
 }

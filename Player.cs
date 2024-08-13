@@ -42,25 +42,69 @@ namespace GeometryFarm
             gold -= item.price;
         }
 
+        /// <summary>
+        /// 플레이어의 위치를 가져오는 메서드
+        /// </summary>
+        /// <returns></returns>
         public Pos GetPos() { return playerPos; }
 
+        /// <summary>
+        /// 플레이어의 위치를 새로 초기화 하는 메서드
+        /// </summary>
+        /// <param name="x">x위치</param>
+        /// <param name="y">y위치</param>
         public void SetPos(int x ,int y) { this.playerPos.setPos(x, y); }
 
-        public string Interection(MapTileType type)
+        /// <summary>
+        /// 맵과 상호작용 하는 메서드
+        /// </summary>
+        /// <param name="type">상호작용하는 타일</param>
+        /// <returns>[임시] 상호작용 했을 때 하는 일</returns>
+        public string Interection(Enum type)
         {
             switch(type)
             {
-                case MapTileType.Crop:
-                    return "농작물을 수확합니다";
-                case MapTileType.Seed:
-                    return "씨앗에 물을줍니다";
-                case MapTileType.Ground:
-                    return "땅을 한번 만져봅니다";
-                case MapTileType.Field:
-                    return "밭을 바라봅니다";
+                case FarmTileType:
+                    return MapInterection((FarmTileType)type);
+                case ShopTileType:
+                    return ShopInterection((ShopTileType)type);
+                default:
+                    return "";
             }
-            return "";
+         
         }
 
+        /// <summary>
+        /// 농장맵과 상호작용 하는 메서드
+        /// </summary>
+        /// <param name="type">상호작용하는 타일</param>
+        /// <returns>[임시] 상호작용 했을 때 하는 일</returns>
+        private string MapInterection(FarmTileType type)
+        {
+            switch(type)
+            {
+                case FarmTileType.Crop:
+                    return "농작물을 수확합니다";
+                case FarmTileType.Seed:
+                    return "씨앗에 물을줍니다";
+                case FarmTileType.Ground:
+                    return "땅을 한번 만져봅니다";
+                case FarmTileType.Field:
+                    return "밭을 바라봅니다";
+                default:
+                    return "";
+            }
+        }
+
+        private string ShopInterection(ShopTileType type)
+        {
+            switch (type)
+            {
+                case ShopTileType.InterectionPlace:
+                    return "상인과 대화를 합니다.";
+                default:
+                    return "";
+            }
+        }
     }
 }
