@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GeometryFarm.Scenes;
+using GeometryFarm.Enums;
+
 
 namespace GeometryFarm
 {
@@ -13,7 +15,8 @@ namespace GeometryFarm
         private Scene[] scenes;
         private Scene currntScene;
 
-        private Player player;
+        private Player player { get; set; }
+        public Player Player { get { return player; } set { player = value; } }
 
         public void Run()
         {
