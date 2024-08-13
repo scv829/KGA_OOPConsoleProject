@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace GeometryFarm.Enums
+﻿namespace GeometryFarm.Enums
 {
     public enum SceneType
     {
-        Main, Farm, VarietyStore, SIZE
+        Main, Farm, VarietyStore, Smithy, SIZE
     }
 
     public enum ItemType
