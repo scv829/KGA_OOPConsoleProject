@@ -1,5 +1,6 @@
 ﻿using GeometryFarm.Enums;
 using GeometryFarm.Util;
+using GeometryFarm.Items;
 using System.Net.Security;
 using System.Text;
 
@@ -7,7 +8,7 @@ namespace GeometryFarm.Scenes
 {
     public class FarmScene : Scene
     {
-        private int[,] map;
+        private (int, Item)[,] map;
         private ConsoleKey input;
 
         // 테스트 용 sb
@@ -18,15 +19,20 @@ namespace GeometryFarm.Scenes
             sb = new StringBuilder();
 
             Console.CursorVisible = false;
-            map = new int[6, 6]
-                {
-                    {1, 1, 1, 1, 1 ,1 },
-                    {1, 0, 0, 0, 0, 5 },
-                    {1, 0, 0, 0, 0, 1 },
-                    {1, 2, 0, 0, 4, 1 },
-                    {1, 0, 0, 3, 0, 1 },
-                    {1, 1, 1, 1, 1, 1 },
-                };
+
+            Crop crop = new Crop("네모", 1000, "네모 농작물");
+            Seed seed = new Seed("네모의 씨앗", 50, "네모 농작물의 씨앗");
+            seed.SetParent(crop);
+
+            map = new (int, Item)[6, 6]
+            {
+                    { (1, null), (1, null), (1, null), (1, null), (1, null), (1, null) },
+                    { (1, null), (0, null), (0, null), (0, null), (0, null), (5, null) },
+                    { (1, null), (0, null), (0, null), (0, null), (0, null), (1, null) },
+                    { (1, null), (2, null), (0, null), (0, null), (3, seed), (1, null) },
+                    { (1, null), (0, null), (0, null), (4, crop), (0, null), (1, null) },
+                    { (1, null), (1, null), (1, null), (1, null), (1, null), (1, null) }
+            };
 
             // 임시로 위치를 설정
             game.Player.SetPos(2, 2);
@@ -51,6 +57,7 @@ namespace GeometryFarm.Scenes
         {
             PrintMap();
             PrintPlayer();
+            game.Player.ShowItem();
         }
 
         private void PrintMap()
@@ -60,7 +67,7 @@ namespace GeometryFarm.Scenes
             {
                 for (int x = 0; x < map.GetLength(1); x++)
                 {
-                    switch ((FarmTileType)map[y, x])
+                    switch ((FarmTileType)map[y, x].Item1)
                     {
                         case FarmTileType.Ground:
                             Console.Write($" ");
@@ -141,20 +148,71 @@ namespace GeometryFarm.Scenes
                 case ConsoleKey.LeftArrow:
                     Move(-1, 0);
                     break;
+                case ConsoleKey.D1:
+                case ConsoleKey.NumPad1:
+                    game.Player.ChangeCurrentUsing(1);
+                    break;
+                case ConsoleKey.D2:
+                case ConsoleKey.NumPad2:
+                    game.Player.ChangeCurrentUsing(2);
+                    break;
+                case ConsoleKey.D3:
+                case ConsoleKey.NumPad3:
+                    game.Player.ChangeCurrentUsing(3);
+                    break;
+                case ConsoleKey.D4:
+                case ConsoleKey.NumPad4:
+                    game.Player.ChangeCurrentUsing(4);
+                    break;
+                case ConsoleKey.D5:
+                case ConsoleKey.NumPad5:
+                    game.Player.ChangeCurrentUsing(5);
+                    break;
+                case ConsoleKey.D6:
+                case ConsoleKey.NumPad6:
+                    game.Player.ChangeCurrentUsing(6);
+                    break;
                 case ConsoleKey.E:
                     sb.Clear();
-                    sb.Append(game.Player.Interection((FarmTileType)map[game.Player.GetPos().y, game.Player.GetPos().x]));
+                    sb.Append(game.Player.Interection((FarmTileType)map[game.Player.GetPos().y, game.Player.GetPos().x].Item1));
+                    CheckTile(ref map[game.Player.GetPos().y, game.Player.GetPos().x]);
                     break;
             }
 
             CheckPlayerPos();
         }
 
+        private void CheckTile(ref (int, Item) tile)
+        {
+            switch((FarmTileType)tile.Item1)
+            {
+                // 상호작용한 타일이 땅일 때
+                case FarmTileType.Ground:
+                    tile.Item1 = game.Player.MakingField() ? (int)FarmTileType.Field : tile.Item1;
+                    break;
+                case FarmTileType.Field:
+                    tile.Item1 = game.Player.PlatingSeed(out tile.Item2) ? (int)FarmTileType.Seed : tile.Item1;
+                    break;
+                case FarmTileType.Seed:
+                    tile.Item2 = game.Player.WateringSeed(tile.Item2 as Seed);
+                    tile.Item1 = (tile.Item2 is Crop) ? (int)FarmTileType.Crop : (int)FarmTileType.Seed; 
+                    break;
+                case FarmTileType.Crop:
+                    if (!game.Player.isInventoryFull())
+                    {
+                        game.Player.harvestingCrop(tile.Item2 as Crop);
+                        tile.Item2 = null;
+                        tile.Item1 = (int)FarmTileType.Field;
+                    }
+                    break;
+            }
+        }
+
         private void Move(int x, int y)
         {
             Pos playerPos = game.Player.GetPos();
 
-            if (map[playerPos.y + y, playerPos.x + x] != 1)
+            if (map[playerPos.y + y, playerPos.x + x].Item1 != 1)
             {
                 game.Player.SetPos(playerPos.x + x, playerPos.y + y);
             }
@@ -162,7 +220,7 @@ namespace GeometryFarm.Scenes
 
         private void CheckPlayerPos()
         {
-            if ((FarmTileType)map[game.Player.GetPos().y, game.Player.GetPos().x] == FarmTileType.Portal)
+            if ((FarmTileType)map[game.Player.GetPos().y, game.Player.GetPos().x].Item1 == FarmTileType.Portal)
             {
                 game.ChangeScene(SceneType.Smithy);
                 game.Player.SetPos(7, 5);
