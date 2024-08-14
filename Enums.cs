@@ -21,7 +21,7 @@
     /// </summary>
     public enum FarmTileType
     {
-        Ground, Fence, Field, Crop, Seed, Portal
+        Ground, Fence, Field, Seed, Crop, Portal
     }
 
     public enum ShopTileType
