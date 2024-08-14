@@ -13,7 +13,7 @@ namespace GeometryFarm
         private string name;
         private int inventoryIndex;
         private Pos playerPos;
-        private int currentUsing;
+        public int currentUsing { get; private set; }
 
 
         public Player(string name)
@@ -46,25 +46,40 @@ namespace GeometryFarm
             gold -= item.price;
         }
 
+        public bool SellItem()
+        {
+            if( 0 < currentUsing && currentUsing <= inventory.Length )
+            {
+                if(inventory[currentUsing - 1] != null)
+                {
+                    gold += inventory[currentUsing - 1].price;
+                    inventory[currentUsing - 1] = null;
+                    inventoryIndex--;
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public void ChangeCurrentUsing(int index)
         {
             this.currentUsing = index;
         }
 
-        public void ShowItem()
+        public void ShowItem(int y = 15)
         {
-            Console.SetCursorPosition(0, 25);
+            
             for(int slot = 0; slot < inventory.Length; slot++)
             {
                 if (slot + 1 == currentUsing)
                 {
                     Console.ForegroundColor = ConsoleColor.Blue;  
                 }
-                Console.SetCursorPosition(0 + slot * 6, 15);
+                Console.SetCursorPosition(0 + slot * 6, y );
                 Console.Write(" ┌──┐ ");
-                Console.SetCursorPosition(0 + slot * 6, 16);
+                Console.SetCursorPosition(0 + slot * 6, y+1);
                 Console.Write($" │{inventory[slot]?.GetType().Name[0],-2}│ ");
-                Console.SetCursorPosition(0 + slot * 6, 17);
+                Console.SetCursorPosition(0 + slot * 6, y+2);
                 Console.Write(" └──┘ ");
                 Console.ResetColor();
             }
