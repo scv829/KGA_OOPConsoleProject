@@ -32,8 +32,8 @@ namespace GeometryFarm.Scenes
             };
 
             itemList = new Item[2];
-            itemList[0] = new Crop("네모", 1000, "네모 농작물");
-            itemList[1] = new Seed("네모의 씨앗", 50, "네모 농작물의 씨앗");
+            itemList[0] = CropFactory.Instantiate("네모");
+            itemList[1] = SeedFactory.Instantiate("네모");
         }
 
         public override void Enter()
@@ -187,7 +187,7 @@ namespace GeometryFarm.Scenes
                 case ConsoleKey.E:
                     sb.Clear();
                     usingStore = true;
-                    game.Player.ChangeCurrentUsing(0);
+                    game.Player.ChangeCurrentUsing(1);
                     break;
             }
             CheckPlayerPos();
@@ -228,9 +228,9 @@ namespace GeometryFarm.Scenes
                     }
                     break;
                 case ConsoleKey.LeftArrow:
-                    if(game.Player.currentUsing - 1 <= 0)
+                    if(game.Player.currentUsing - 1 <= 1)
                     {
-                        game.Player.ChangeCurrentUsing(0);
+                        game.Player.ChangeCurrentUsing(1);
                     }
                     else
                     {
@@ -238,9 +238,9 @@ namespace GeometryFarm.Scenes
                     }
                     break;
                 case ConsoleKey.RightArrow:
-                    if (game.Player.currentUsing + 1 >= 7)
+                    if (game.Player.currentUsing + 1 >= 6)
                     {
-                        game.Player.ChangeCurrentUsing(7);
+                        game.Player.ChangeCurrentUsing(6);
                     }
                     else
                     {

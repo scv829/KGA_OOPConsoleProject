@@ -19,9 +19,9 @@ namespace GeometryFarm.Items
         /// <summary>
         /// 도형을 성장시키는 도구 ex) 물뿌리개
         /// </summary>
-        public void Grow(Crop crop)
+        public void Grow(Seed seed)
         {
-            crop.Grow(this.effect);
+            seed.Grow(this.effect);
         }
     }
 }

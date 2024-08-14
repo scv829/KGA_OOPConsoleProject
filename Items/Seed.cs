@@ -6,22 +6,34 @@ using System.Threading.Tasks;
 
 namespace GeometryFarm.Items
 {
+
     public class Seed : Item
     {
-        private Crop parnet;
-        public Seed( string name, int price, string description) : base(name, price, description)
+        private int growingTime;
+
+        private Crop parent;
+        public Crop Parent { get { return parent; } set { parent = value; } }
+
+        public Seed( string name, int price, string description, int time) : base(name, price, description)
         {
+            this.growingTime = time;
         }
 
-        public void SetParent(Crop crop)
+        /// <summary>
+        /// 식물이 성장하는 시간 
+        /// </summary>
+        /// <param name="time">성장시키는 도구의 감소 효과</param>
+        public bool Grow(int time)
         {
-            parnet = crop;
+            if (growingTime == 0)
+            {
+                return true;
+            }
+            else
+            {
+                growingTime -= time;
+                return false;
+            }
         }
-
-        public Crop GetParent ()
-        {
-            return parnet;
-        }
-
     }
 }

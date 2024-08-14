@@ -1,6 +1,7 @@
 ﻿using GeometryFarm.Enums;
 using GeometryFarm.Items;
 using GeometryFarm.Util;
+using System.Net.Security;
 
 namespace GeometryFarm
 {
@@ -26,11 +27,8 @@ namespace GeometryFarm
             this.playerPos = new Pos();
             this.currentUsing = 1;
 
-            Crop crop = new Crop("네모", 1000, "네모 농작물");
-            Seed seed = new Seed("네모의 씨앗", 50, "네모 농작물의 씨앗");
-            seed.SetParent(crop);
             
-            inventory[0] = seed;
+            inventory[0] = SeedFactory.Instantiate("네모");
         }
 
         public bool isInventoryFull()
@@ -169,7 +167,6 @@ namespace GeometryFarm
 
         public Item WateringSeed(Seed seed)
         {
-            // Todo
             // 만약 내가 물뿌리개를 들고 있다면
             // seed에 물뿌리개의 효과만큼 성장시키기
             // 그리고 seed를 반환 
@@ -177,15 +174,15 @@ namespace GeometryFarm
             // seed의 parent인 crop을 리턴
             // 아니다 그냥 return False로
 
-            return seed.GetParent(); 
+            return seed.Parent; 
         }
 
         public void harvestingCrop(Crop crop)
         {
-            // 해당 농작물을 수확하고 인벤토리에 넣는다
             // 인벤토리에 넣을 때 비어 있는지 확인
             int index = CheckEmpty();
 
+            // 해당 농작물을 수확하고 인벤토리에 넣는다
             inventory[index] = crop;
             inventoryIndex++;
         }
