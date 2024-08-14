@@ -1,4 +1,5 @@
 ﻿using GeometryFarm.Enums;
+using GeometryFarm.Items;
 using GeometryFarm.Util;
 using System.Text;
 
@@ -6,17 +7,21 @@ namespace GeometryFarm.Scenes
 {
     public class VarietyStoreScene : Scene
     {
-        int[,] map;
+        private int[,] map;
         private ConsoleKey input;
+        private bool usingStore;
+
+        private Item[] itemList;
 
         // 테스트 용 sb
         private StringBuilder sb;
 
         public VarietyStoreScene(Game game) : base(game)
         {
+            usingStore = false;
             sb = new StringBuilder();
             map = new int[7, 15]
-                {
+            {
                     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
                     { 1, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
                     { 1, 0, 3, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
@@ -24,8 +29,11 @@ namespace GeometryFarm.Scenes
                     { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
                     { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
                     { 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-                };
+            };
 
+            itemList = new Item[2];
+            itemList[0] = new Crop("네모", 1000, "네모 농작물");
+            itemList[1] = new Seed("네모의 씨앗", 50, "네모 농작물의 씨앗");
         }
 
         public override void Enter()
@@ -46,13 +54,23 @@ namespace GeometryFarm.Scenes
         public override void Render()
         {
             Console.Clear();
-            PrintMap();
-            PrintPlayer();
+            if (usingStore)
+            {
+                PrintShop();
+            }
+            else
+            {
+                PrintMap();
+                PrintPlayer();
+            }
+            Console.SetCursorPosition(0, 20);
+            Console.WriteLine(sb.ToString());
+
         }
 
         private void PrintMap()
         {
-            Console.SetCursorPosition(0, 0);
+            Console.CursorVisible = false;
             for (int y = 0; y < map.GetLength(0); y++)
             {
                 for (int x = 0; x < map.GetLength(1); x++)
@@ -84,9 +102,6 @@ namespace GeometryFarm.Scenes
                 Console.WriteLine();
             }
 
-            Console.SetCursorPosition(0, 20);
-            Console.WriteLine(sb.ToString());
-
         }
 
         private void PrintPlayer()
@@ -97,10 +112,25 @@ namespace GeometryFarm.Scenes
             Console.ResetColor();
         }
 
+        private void PrintShop()
+        {
+            Console.WriteLine("=====================잡화점======================");
+            for (int index = 0; index < itemList.Length; index++)
+            {
+                Console.WriteLine(" ┌─────────────────────────────────────────────┐");
+                Console.WriteLine($"  {index + 1,2}.\t이름 : {itemList[index].name}");
+                Console.WriteLine($"    \t가격 : {itemList[index].price}G");
+                Console.WriteLine($"    \t설명 : {itemList[index].description}");
+                Console.WriteLine(" └─────────────────────────────────────────────┘");
+            }
+            Console.CursorVisible = true;
+            Console.WriteLine("=========물건 구매(각 번호) || 나가기 (0)========");
+            Console.Write("선택한 번호 : ");
+
+        }
 
         private void PrintFence(int x, int y)
         {
-
             if (x == 0)
             {
                 if (y == 0) Console.Write("┌");
@@ -123,6 +153,19 @@ namespace GeometryFarm.Scenes
         public override void Update()
         {
             // 해당 키를 입력받은 곳으로 이동하기 
+
+            if (usingStore)
+            {
+                InputStore();
+            }
+            else
+            {
+                InputMove();
+            }
+        }
+
+        private void InputMove()
+        {
             switch (input)
             {
                 case ConsoleKey.UpArrow:
@@ -139,11 +182,52 @@ namespace GeometryFarm.Scenes
                     break;
                 case ConsoleKey.E:
                     sb.Clear();
-                    sb.Append(game.Player.Interection((ShopTileType)map[game.Player.GetPos().y, game.Player.GetPos().x]));
+                    usingStore = true;
                     break;
             }
-
             CheckPlayerPos();
+        }
+
+        private void InputStore()
+        {
+            switch (input)
+            {
+                case ConsoleKey.D0:
+                case ConsoleKey.NumPad0:
+                    usingStore = false;
+                    sb.Clear();
+                    sb.Append($"상인과의 대화를 마무리 합니다.");
+                    break;
+                case ConsoleKey.D1:
+                case ConsoleKey.NumPad1:
+                    if (!game.Player.isInventoryFull() && game.Player.gold >= itemList[0].price)
+                    {
+                        game.Player.BuyItem(itemList[0]);
+                        sb.Clear();
+                        sb.Append($"{itemList[0].name}을 구매했습니다!");
+                    }
+                    else
+                    {
+                        sb.Clear();
+                        sb.Append("잔액 혹은 인벤토리 자리가 부족합니다.");
+                    }
+                    break;
+                case ConsoleKey.D2:
+                case ConsoleKey.NumPad2:
+                    if (!game.Player.isInventoryFull() && game.Player.gold >= itemList[1].price)
+                    {
+                        game.Player.BuyItem(itemList[1]);
+                        sb.Clear();
+                        sb.Append($"{itemList[1].name}을 구매했습니다!");
+                    }
+                    else
+                    {
+                        sb.Clear();
+                        sb.Append("잔액 혹은 인벤토리 자리가 부족합니다.");
+                    }
+
+                    break;
+            }
         }
 
         private void Move(int x, int y)

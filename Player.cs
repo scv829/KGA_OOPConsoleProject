@@ -6,6 +6,7 @@ namespace GeometryFarm
 {
     public class Player
     {
+
         private Item[] inventory;
         public int gold { get; private set; }
         public int fatigue { get; private set; }
@@ -39,7 +40,9 @@ namespace GeometryFarm
 
         public void BuyItem(Item item)
         {
-            inventory[inventoryIndex++] = item;
+            int index = CheckEmpty();
+            inventory[index] = item;
+            inventoryIndex++;
             gold -= item.price;
         }
 
@@ -60,7 +63,7 @@ namespace GeometryFarm
                 Console.SetCursorPosition(0 + slot * 6, 15);
                 Console.Write(" ┌──┐ ");
                 Console.SetCursorPosition(0 + slot * 6, 16);
-                Console.Write($" │{inventory[slot]?.price,-2}│ ");
+                Console.Write($" │{inventory[slot]?.GetType().Name[0],-2}│ ");
                 Console.SetCursorPosition(0 + slot * 6, 17);
                 Console.Write(" └──┘ ");
                 Console.ResetColor();
@@ -166,15 +169,22 @@ namespace GeometryFarm
         {
             // 해당 농작물을 수확하고 인벤토리에 넣는다
             // 인벤토리에 넣을 때 비어 있는지 확인
-            for(int i = 0; i < inventory.Length; i++)
+            int index = CheckEmpty();
+
+            inventory[index] = crop;
+            inventoryIndex++;
+        }
+
+        private int CheckEmpty()
+        {
+            for (int i = 0; i < inventory.Length; i++)
             {
                 if (inventory[i] == null)
                 {
-                    inventoryIndex++;
-                    inventory[i] = crop;
-                    break;
+                    return i;
                 }
             }
+            return -1;
         }
 
 
