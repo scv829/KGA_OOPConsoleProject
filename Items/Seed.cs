@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GeometryFarm.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +17,7 @@ namespace GeometryFarm.Items
         private Crop parent;
         public Crop Parent { get { return parent; } set { parent = value; } }
 
-        public Seed( string name, int price, string description, int time) : base(name, price, description)
+        public Seed( string name, int price, string description, ItemType type , int time) : base(name, price, description, type)
         {
             this.growingTime = time;
             this.isGrew = false;
@@ -34,9 +35,11 @@ namespace GeometryFarm.Items
             {
                 isGrew = true;
             }
-
         }
 
-        
+        public override void PrintImage()
+        {
+            Console.Write($"{"S",2}");
+        }
     }
 }

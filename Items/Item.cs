@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GeometryFarm.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,17 +9,20 @@ namespace GeometryFarm.Items
 {
     public abstract class Item
     {
-        private string name;
+        public string name { get; private set; }
         public int price { get; private set; }
-        private string description;
+        public string description { get; private set; }
 
-        public Item(string name, int price, string description)
+        public ItemType itemType { get; private set; }
+
+        public Item(string name, int price, string description, ItemType type)
         {
             this.name = name;
             this.price = price;
             this.description = description;
+            this.itemType = type;
         }
 
-        
+        public abstract void PrintImage();
     }
 }

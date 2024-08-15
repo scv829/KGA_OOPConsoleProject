@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GeometryFarm.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Security;
@@ -14,10 +15,14 @@ namespace GeometryFarm.Items
         public char shape;
         public char Shape { get{ return shape; } set { shape = value; } }
 
-        public Crop(string name, int price, string description) : base(name, price, description)
+        public Crop(string name, int price, string description, ItemType type) : base(name, price, description, type)
         {
             
         }
 
+        public override void PrintImage()
+        {
+            Console.Write($"{shape,2}");
+        }
     }
 }

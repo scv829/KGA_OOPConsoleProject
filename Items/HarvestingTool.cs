@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GeometryFarm.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,13 @@ namespace GeometryFarm.Items
 {
     public class HarvestingTool : Item
     {
-        public HarvestingTool(string name, int price, string description) : base(name, price, description)
+        public HarvestingTool(string name, int price, string description) : base(name, price, description, ItemType.Tool)
         {
+        }
+
+        public override void PrintImage()
+        {
+            throw new NotImplementedException();
         }
     }
 }
