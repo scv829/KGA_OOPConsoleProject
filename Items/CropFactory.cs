@@ -49,8 +49,7 @@ namespace GeometryFarm.Items
             }
             else
             {
-                Console.WriteLine("해당 이름의 아이템이 없습니다.");
-                return null;
+                throw new Exception("해당 이름의 아이템이 없습니다. [Crop]");
             }
         }
     }
