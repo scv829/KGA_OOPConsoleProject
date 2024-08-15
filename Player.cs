@@ -27,8 +27,10 @@ namespace GeometryFarm
             this.playerPos = new Pos();
             this.currentUsing = 1;
 
-            
-            inventory[0] = SeedFactory.Instantiate("네모");
+
+            inventory[0] = GrowingToolFactory.Instantiate("물뿌리개");
+            inventory[1] = GrowingToolFactory.Instantiate("구리 물뿌리개");
+            inventory[2] = SeedFactory.Instantiate("원형");
         }
 
         public bool isInventoryFull()
@@ -141,7 +143,7 @@ namespace GeometryFarm
         public bool MakingField()
         {
             // Todo
-            // 만약 내가 호미를 가지고 있다?
+            // 만약 내가 경작 도구를 가지고 있다?
             // return true;
             // 아니다 false
 
@@ -168,13 +170,20 @@ namespace GeometryFarm
         public Item WateringSeed(Seed seed)
         {
             // 만약 내가 물뿌리개를 들고 있다면
-            // seed에 물뿌리개의 효과만큼 성장시키기
-            // 그리고 seed를 반환 
-            // 만약 seed가 성장 수치를 다 채웠으면
-            // seed의 parent인 crop을 리턴
-            // 아니다 그냥 return False로
-
-            return seed.Parent; 
+            if (inventory[currentUsing-1] is GrowingTool)
+            {
+                // seed에 물뿌리개의 효과만큼 성장시키기
+                GrowingTool tool = (GrowingTool)inventory[currentUsing-1];
+                tool.Grow(seed);
+                // 만약 seed가 성장 수치를 다 채웠으면
+                if (seed.isGrew)
+                {
+                    // seed의 parent인 crop을 리턴
+                    return seed.Parent;
+                }
+            }
+            // 아니다 그냥 seed를 반환 
+            return seed;
         }
 
         public void harvestingCrop(Crop crop)
@@ -186,6 +195,7 @@ namespace GeometryFarm
             inventory[index] = crop;
             inventoryIndex++;
         }
+
 
         private int CheckEmpty()
         {
