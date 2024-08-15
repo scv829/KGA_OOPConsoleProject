@@ -8,20 +8,30 @@ namespace GeometryFarm.Items
 {
     public class GrowingTool : Item
     {
-        private int effect;
+        private int effect;              // 성장 수치
+        private int maximumCapacity;     // 최대 용량
+        private int currentCapacity;     // 현재 용량
+
+        public int Effect { get { return effect; } set { effect = value; } }
+        public int Capacity { get { return maximumCapacity; } set { maximumCapacity = value; currentCapacity = value; } }
+        public int CurrentCapacity { get { return currentCapacity; } }
 
         public GrowingTool(string name, int price, string description) : base(name, price, description)
         {
-            effect = 1;
         }
 
-
-        /// <summary>
-        /// 도형을 성장시키는 도구 ex) 물뿌리개
-        /// </summary>
         public void Grow(Seed seed)
         {
-            seed.Grow(this.effect);
+            if(currentCapacity > 0)
+            {
+                seed.Grow(this.effect);
+                currentCapacity--;
+            }
+        }
+
+        public void Charge()
+        {
+            currentCapacity = maximumCapacity;
         }
     }
 }
