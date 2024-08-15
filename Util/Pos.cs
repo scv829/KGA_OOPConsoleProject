@@ -17,10 +17,15 @@ namespace GeometryFarm.Util
             this.y = y;
         }
 
-        public void setPos(int x, int y)
+        public void SetPos(int x, int y)
         {
             this.x = x;
             this.y = y;
+        }
+
+        public bool IsEqual(int x, int y)
+        {
+            return (this.x == x && this.y == y);
         }
 
     }
