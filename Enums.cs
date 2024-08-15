@@ -7,8 +7,14 @@
 
     public enum ItemType
     {
-        Crop, Harvest, Grow
+        Crop, Seed, Tool
     }
+
+    public enum ToolRankType
+    {
+        Normal, Copper, Steel, Golden, MAX
+    }
+
 
     /// <summary>
     /// 농장맵 타일 타입
