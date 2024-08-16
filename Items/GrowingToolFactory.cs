@@ -18,6 +18,7 @@ namespace GeometryFarm.Items
                 tool.Capacity = 3;
                 tool.ToolRank = type;
 
+                tool.SetIngredient(2000, new List<(Item, int)>());
                 return tool;
             }
             else if (type ==  ToolRankType.Copper)
@@ -27,6 +28,7 @@ namespace GeometryFarm.Items
                 tool.Capacity = 3;
                 tool.ToolRank = type;
 
+                tool.SetIngredient(5000, new List<(Item, int)>());
                 return tool;
             }
             else if (type ==  ToolRankType.Steel)
@@ -36,6 +38,7 @@ namespace GeometryFarm.Items
                 tool.Capacity = 7;
                 tool.ToolRank = type;
 
+                tool.SetIngredient(10000, new List<(Item, int)>());
                 return tool;
             }
             else if (type ==  ToolRankType.Golden)
@@ -46,6 +49,10 @@ namespace GeometryFarm.Items
                 tool.ToolRank = type;
 
                 return tool;
+            }
+            else if (type == ToolRankType.MAX)
+            {
+                return null;
             }
             else
             {

@@ -28,8 +28,6 @@ namespace GeometryFarm.Util
 
         private bool isChanging;
 
-        private int startX = 70;
-
         private StringBuilder sb;
 
         public Inventory()
@@ -78,7 +76,7 @@ namespace GeometryFarm.Util
             SetMessage("C : 아이템 위치 변경 / I : 인벤토리 닫기 / D : 아이템 삭제");
         }
 
-        public void ShowItemInfo(Pos pos)
+        public void ShowItemInfo(Pos pos, int startX = 70)
         {
             if (items[pos.y, pos.x].Item1 == null)
             {
@@ -109,7 +107,7 @@ namespace GeometryFarm.Util
 
         }
 
-        public void ShowInventory()
+        public void ShowInventory(int startX = 70)
         {
             Console.SetCursorPosition(startX , 0);
             Console.Write("====================인벤토리====================");
@@ -328,6 +326,74 @@ namespace GeometryFarm.Util
         {
             sb.Clear();
             sb.Append(msg);
+        }
+
+        public (Item, int) FindItemByPos(Pos pos)
+        {
+            return items[pos.y, pos.x];
+        }
+
+        /// <summary>
+        /// 아이템이 있는지 확인하는 메서드
+        /// </summary>
+        /// <param name="item">확인할 아이템</param>
+        /// <returns>만약 있으면 확인할 아이템의 좌표 반환 없으면 -1,-1 로 반환</returns>
+        public Pos ContainItem(Item item)
+        {
+            for (int y = 0; y < items.GetLength(0); y++)
+            {
+                for (int x = 10; x < items.GetLength(1); x++)
+                {
+                    if (items[y, x].Item1 == item) return new Pos(x, y);
+                }
+            }
+            return new Pos(-1, -1);
+        }
+
+        /// <summary>
+        /// 도구 업그레이드에서 재료의 수를 만족하는지 확인하는 메서드
+        /// </summary>
+        /// <param name="item">재료(아이템, 수량)</param>
+        /// <returns>재료가 충분히 있는지 여부</returns>
+        public bool ContainItem((Item, int) item)
+        {
+            for(int y = 0; y < items.GetLength(0); y++)
+            {
+                for(int x = 10; x < items.GetLength(1); x++)
+                {
+                    if (items[y, x].Item1 == item.Item1 && items[y, x].Item2 <= item.Item2) return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        ///  업그레이드 가능한 도구를 찾는 메서드
+        /// </summary>
+        /// <returns>업그레이드 가능한 도구들</returns>
+        public List<Pos> FindItemsByIUpgrade()
+        {
+            List<Pos> result = new List<Pos>();
+
+            for (int y = 0; y < items.GetLength(0); y++)
+            {
+                for (int x = 0; x < items.GetLength(1); x++)
+                {
+                    if (items[y, x].Item1 is IUpgrade) result.Add(new Pos(x, y));
+                }
+            }
+            return result;
+        }
+
+        public void UpgradeItemByPos(Pos pos)
+        {
+            (Item, int) item = FindItemByPos(pos);
+
+            if(item.Item1 is GrowingTool)
+            {
+                GrowingTool growingTool = (GrowingTool)item.Item1;
+                items[pos.y, pos.x] = (GrowingToolFactory.Instantiate(growingTool.ToolRank + 1), item.Item2);
+            }
         }
     }
 }
