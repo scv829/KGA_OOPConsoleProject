@@ -43,9 +43,7 @@ namespace GeometryFarm.Util
             sb = new StringBuilder();
 
             InsertItem(GrowingToolFactory.Instantiate(ToolRankType.Normal));
-            InsertItem(GrowingToolFactory.Instantiate(ToolRankType.Copper));
-            InsertItem(GrowingToolFactory.Instantiate(ToolRankType.Steel));
-            InsertItem(GrowingToolFactory.Instantiate(ToolRankType.Golden));
+            InsertItem(FarmingToolFactory.Instantiate(ToolRankType.Normal));
         }
 
         public void InsertItem(Item item, int count = 1)
@@ -156,13 +154,19 @@ namespace GeometryFarm.Util
         }
 
    
-        public void ShowQuickSlot(int y = 15)
+        public void ShowQuickSlot(int y = 25)
         {
             for (int slot = 0; slot < 6; slot++)
             {
                 if (slot == currentUsing.x && currentUsing.y == 0)
                 {
                     Console.ForegroundColor = ConsoleColor.Blue;
+                    if (items[0, slot].Item1 is GrowingTool)
+                    {
+                        GrowingTool tool = items[0, slot].Item1 as GrowingTool;
+                        Console.SetCursorPosition(0 + slot * 8, y + 3);
+                        Console.Write($"  {tool.CurrentCapacity} / {tool.Capacity}");
+                    }
                 }
                 Console.SetCursorPosition(0 + slot * 8, y);
                 Console.Write($"{" ┌───┐ "}");
@@ -179,7 +183,9 @@ namespace GeometryFarm.Util
                 Console.Write($"│ ");
                 Console.SetCursorPosition(0 + slot * 8, y + 2);
                 Console.Write($"{" └───┘ "}");
+                
                 Console.ResetColor();
+
             }
         }
 
@@ -393,6 +399,16 @@ namespace GeometryFarm.Util
             {
                 GrowingTool growingTool = (GrowingTool)item.Item1;
                 items[pos.y, pos.x] = (GrowingToolFactory.Instantiate(growingTool.ToolRank + 1), item.Item2);
+            }
+        }
+
+        public void Charge()
+        {
+            if (GetHodingCurrentItem() is GrowingTool)
+            {
+                GrowingTool tool = GetHodingCurrentItem() as GrowingTool;
+                tool.Charge();
+                items[currentUsing.y, currentUsing.x].Item1 = tool;
             }
         }
     }

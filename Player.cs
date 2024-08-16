@@ -94,6 +94,9 @@ namespace GeometryFarm
                 case FarmTileType.Seed:
                     if (inventory.GetHodingCurrentItem() is GrowingTool) return "씨앗에 물을 줍니다.";
                         return "씨앗을 확인합니다";
+                case FarmTileType.Water:
+                    if (inventory.GetHodingCurrentItem() is GrowingTool) return "강물에서 물을 채웁니다.";
+                    return "물의 흐름을 관찰합니다.";
                 default:
                     return "";
             }
@@ -151,6 +154,11 @@ namespace GeometryFarm
             // 해당 농작물을 수확하고 인벤토리에 넣는다
             inventory.InsertItem(crop);
 
+        }
+
+        public void FillWater()
+        {
+            inventory.Charge();
         }
 
         private string ShopInterection(ShopTileType type)
