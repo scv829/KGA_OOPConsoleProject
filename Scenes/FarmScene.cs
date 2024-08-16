@@ -23,14 +23,28 @@ namespace GeometryFarm.Scenes
             Crop crop = CropFactory.Instantiate("원형");
             Seed seed = SeedFactory.Instantiate("원형");
 
-            map = new (int, Item)[6, 6]
+            map = new (int, Item)[20, 45]
             {
-                    { (1, null), (1, null), (1, null), (1, null), (1, null), (1, null) },
-                    { (1, null), (0, null), (0, null), (0, null), (0, null), (5, null) },
-                    { (1, null), (0, null), (0, null), (0, null), (0, null), (1, null) },
-                    { (1, null), (2, null), (0, null), (0, null), (3, seed), (1, null) },
-                    { (1, null), (0, null), (0, null), (4, crop), (0, null), (1, null) },
-                    { (1, null), (1, null), (1, null), (1, null), (1, null), (1, null) }
+                    { (1, null), (1, null), (1, null), (1, null), (1, null), (1, null) , (1, null), (1, null), (1, null), (1, null), (1, null) , (1, null), (1, null), (1, null), (1, null), (1, null) , (1, null), (1, null), (1, null), (1, null) , (1, null), (1, null), (1, null), (1, null), (1, null), (1, null) , (1, null), (1, null), (1, null), (1, null), (1, null) , (1, null) , (1, null) , (1, null) , (1, null) , (1, null) , (1, null) , (1, null) , (1, null) , (1, null)  , (1, null) , (1, null) , (1, null) , (1, null), (1, null) },
+                    { (1, null), (5, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null)  , (0, null) , (0, null) , (0, null) , (0, null), (6, null) },
+                    { (1, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null)  , (0, null) , (0, null) , (0, null) , (0, null), (1, null) },
+                    { (1, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null)  , (0, null) , (0, null) , (0, null) , (0, null), (1, null) },
+                    { (1, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null)  , (0, null) , (0, null) , (0, null) , (0, null), (1, null) },
+                    { (1, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null)  , (0, null) , (0, null) , (0, null) , (0, null), (1, null) },
+                    { (1, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null)  , (0, null) , (0, null) , (0, null) , (0, null), (1, null) },
+                    { (1, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null)  , (0, null) , (0, null) , (0, null) , (0, null), (1, null) },
+                    { (1, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null)  , (0, null) , (0, null) , (0, null) , (0, null), (1, null) },
+                    { (1, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null)  , (0, null) , (0, null) , (0, null) , (0, null), (1, null) },
+                    { (1, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null)  , (0, null) , (0, null) , (0, null) , (0, null), (1, null) },
+                    { (1, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null)  , (0, null) , (0, null) , (0, null) , (0, null), (1, null) },
+                    { (1, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null)  , (0, null) , (0, null) , (0, null) , (0, null), (1, null) },
+                    { (1, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null)  , (0, null) , (0, null) , (0, null) , (0, null), (1, null) },
+                    { (1, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null)  , (0, null) , (0, null) , (0, null) , (0, null), (1, null) },
+                    { (1, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null)  , (0, null) , (0, null) , (0, null) , (0, null), (1, null) },
+                    { (1, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null)  , (0, null) , (0, null) , (0, null) , (0, null), (1, null) },
+                    { (1, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null)  , (0, null) , (0, null) , (0, null) , (0, null), (1, null) },
+                    { (1, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null), (0, null), (0, null), (0, null), (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null) , (0, null)  , (0, null) , (0, null) , (0, null) , (0, null), (1, null) },
+                    { (1, null), (1, null), (1, null), (1, null), (1, null), (1, null) , (1, null), (1, null), (1, null), (1, null), (1, null) , (1, null), (1, null), (1, null), (1, null), (1, null) , (1, null), (1, null), (1, null), (1, null) , (1, null), (1, null), (1, null), (1, null), (1, null), (1, null) , (1, null), (1, null), (1, null), (1, null), (1, null) , (1, null) , (1, null) , (1, null) , (1, null) , (1, null) , (1, null) , (1, null) , (1, null) , (1, null)  , (1, null) , (1, null) , (1, null) , (1, null), (1, null) },
             };
 
             // 임시로 위치를 설정
@@ -54,6 +68,7 @@ namespace GeometryFarm.Scenes
 
         public override void Render()
         {
+            Console.Clear();
             PrintMap();
             PrintPlayer();
             game.Player.inventory.ShowQuickSlot();
@@ -65,7 +80,8 @@ namespace GeometryFarm.Scenes
 
         private void PrintMap()
         {
-            Console.SetCursorPosition(0, 0);
+            Console.WriteLine("=====================농 장======================");
+
             for (int y = 0; y < map.GetLength(0); y++)
             {
                 for (int x = 0; x < map.GetLength(1); x++)
@@ -84,10 +100,13 @@ namespace GeometryFarm.Scenes
                             break;
                         case FarmTileType.Crop:
                             Crop crop = map[y, x].Item2 as Crop;
-                            crop.PrintImage();
+                            Console.Write(crop.Shape);
                             break;
                         case FarmTileType.Seed:
-                            map[y, x].Item2.PrintImage();
+                            Console.Write($"S");
+                            break;
+                        case FarmTileType.Water:
+                            Console.Write("W");
                             break;
                         case FarmTileType.Portal:
                             Console.ForegroundColor = ConsoleColor.Blue;
@@ -106,7 +125,7 @@ namespace GeometryFarm.Scenes
 
         private void PrintPlayer()
         {
-            Console.SetCursorPosition(game.Player.GetPos().x, game.Player.GetPos().y);
+            Console.SetCursorPosition(game.Player.GetPos().x, game.Player.GetPos().y + 1);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("P");
             Console.ResetColor();
@@ -216,6 +235,9 @@ namespace GeometryFarm.Scenes
                     tile.Item2 = game.Player.WateringSeed(tile.Item2 as Seed);
                     tile.Item1 = (tile.Item2 is Crop) ? (int)FarmTileType.Crop : (int)FarmTileType.Seed; 
                     break;
+                case FarmTileType.Water:
+                    game.Player.FillWater();
+                    break;
                 case FarmTileType.Crop:
                     if (!game.Player.inventory.isInventoryFull())
                     {
@@ -231,7 +253,7 @@ namespace GeometryFarm.Scenes
         {
             Pos playerPos = game.Player.GetPos();
 
-            if (map[playerPos.y + y, playerPos.x + x].Item1 != 1)
+            if (map[playerPos.y + y, playerPos.x + x].Item1 != 1 )
             {
                 game.Player.SetPos(playerPos.x + x, playerPos.y + y);
             }

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using GeometryFarm.Enums;
 using System.Text;
-using System.Threading.Tasks;
-using GeometryFarm.Enums;
 
 namespace GeometryFarm.Scenes
 {
@@ -11,14 +7,17 @@ namespace GeometryFarm.Scenes
     {
 
         private string input;
+        private StringBuilder sb;
 
         public MainScene(Game game) : base(game)
         {
+            sb = new StringBuilder();
         }
 
         public override void Enter()
         {
-            
+            sb.AppendLine("\r\n                                                ##                                                          \r\n   ####                                         ##                       #######                            \r\n  ##  ##                                        ##                       ##                                 \r\n ##        #####    #####   ### ##    #####   ######   ## ###   ##  ##   ##        ######  ## ###   ### ##  \r\n ##       ##   ##  ##   ##  ## # ##  ##   ##    ##     ###      ##  ##   #####    ##   ##  ###      ## # ## \r\n ##  ###  #######  ##   ##  ## # ##  #######    ##     ##       ##  ##   ##       ##   ##  ##       ## # ## \r\n  ##  ##  ##       ##   ##  ## # ##  ##         ##     ##       ##  ##   ##       ##  ###  ##       ## # ## \r\n   #####   #####    #####   ##   ##   #####      ###   ##        #####   ##        ### ##  ##       ##   ## \r\n                                                                    ##                                      \r\n                                                                 ####                                       \r\n");
+            sb.AppendLine("\r\n #                        #                 #                             ##                ##          #     #    \r\n##                        #                 #                            #  #              #  #               #    \r\n #                 ###   ###    ###  ###   ###                              #              #  #  #  #  ##    ###   \r\n #                ##      #    #  #  #  #   #                              #               #  #  #  #   #     #    \r\n #     ##           ##    #    # ##  #      #                             #     ##         ## #  #  #   #     #    \r\n###    ##         ###      ##   # #  #       ##                          ####   ##          ##    ###  ###     ##  \r\n                                                                                              #                    \r\n");
         }
 
         public override void Exit()
@@ -29,17 +28,13 @@ namespace GeometryFarm.Scenes
         {
             // 키 입력 받기
             input = Console.ReadLine();
-            
+
         }
 
         public override void Render()
         {
             // 타이틀 보여주기
-            Console.WriteLine("도형 농장");
-            Console.WriteLine("1. 게임 시작");
-            Console.WriteLine("2. 게임 종료");
-            // 1. 게임 시작
-            // 2. 게임 종료
+            Console.WriteLine(sb.ToString());
         }
 
         public override void Update()
@@ -52,6 +47,7 @@ namespace GeometryFarm.Scenes
                     game.ChangeScene(SceneType.Farm);
                     break;
                 case "2":
+                    Console.Clear();
                     Console.WriteLine("게임 종료");
                     game.Over();
                     break;
@@ -59,7 +55,7 @@ namespace GeometryFarm.Scenes
                     Console.WriteLine("입력 오류");
                     break;
             }
-            
+
         }
     }
 }

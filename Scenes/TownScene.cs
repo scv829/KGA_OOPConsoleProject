@@ -76,6 +76,7 @@ namespace GeometryFarm.Scenes
 
         private void PrintMap()
         {
+            Console.WriteLine("=====================마 을======================");
             Console.CursorVisible = false;
             for (int y = 0; y < map.GetLength(0); y++)
             {
@@ -104,7 +105,7 @@ namespace GeometryFarm.Scenes
 
         private void PrintPlayer()
         {
-            Console.SetCursorPosition(game.Player.GetPos().x, game.Player.GetPos().y);
+            Console.SetCursorPosition(game.Player.GetPos().x, game.Player.GetPos().y + 1);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("P");
             Console.ResetColor();
@@ -159,7 +160,7 @@ namespace GeometryFarm.Scenes
                 if(game.Player.GetPos().Equals(FarmPos))
                 {
                     game.ChangeScene(SceneType.Farm);
-                    game.Player.SetPos(4, 1);
+                    game.Player.SetPos(43, 1);
                 }
                 else if(game.Player.GetPos().Equals(VarietyStorePos))
                 {
