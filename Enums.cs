@@ -2,7 +2,7 @@
 {
     public enum SceneType
     {
-        Main, Farm, VarietyStore, Smithy, SIZE
+        Main, Farm, Town, VarietyStore, Smithy, SIZE
     }
 
     public enum ItemType
@@ -14,7 +14,6 @@
     {
         Normal, Copper, Steel, Golden, MAX
     }
-
 
     /// <summary>
     /// 농장맵 타일 타입
@@ -34,4 +33,10 @@
     {
         Ground, Block, Shopkeeper, InterectionPlace, Portal = 5
     }
+
+    public enum TownTileType
+    {
+        Ground, Block, Portal = 5
+    }
+
 }

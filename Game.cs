@@ -52,6 +52,7 @@ namespace GeometryFarm
             
             scenes[(int)SceneType.Main] = new MainScene(this);
             scenes[(int)SceneType.Farm] = new FarmScene(this);
+            scenes[(int)SceneType.Town] = new TownScene(this);
             scenes[(int)SceneType.VarietyStore] = new VarietyStoreScene(this);
             scenes[(int)SceneType.Smithy] = new SmithyScene(this);
             

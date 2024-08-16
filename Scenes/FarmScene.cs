@@ -241,8 +241,8 @@ namespace GeometryFarm.Scenes
         {
             if ((FarmTileType)map[game.Player.GetPos().y, game.Player.GetPos().x].Item1 == FarmTileType.Portal)
             {
-                game.ChangeScene(SceneType.VarietyStore);
-                game.Player.SetPos(3, 5);
+                game.ChangeScene(SceneType.Town);
+                game.Player.SetPos(1, 1);
             }
 
         }
