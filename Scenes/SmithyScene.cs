@@ -88,7 +88,7 @@ namespace GeometryFarm.Scenes
         #region 맵 내에서 이동[Render]
         private void PrintMap()
         {
-            Console.SetCursorPosition(0, 0);
+            Console.WriteLine("=====================대장간======================");
             for (int y = 0; y < map.GetLength(0); y++)
             {
                 for (int x = 0; x < map.GetLength(1); x++)
@@ -120,14 +120,14 @@ namespace GeometryFarm.Scenes
                 Console.WriteLine();
             }
 
-            Console.SetCursorPosition(0, 20);
+            Console.SetCursorPosition(0, 25);
             Console.WriteLine(sb.ToString());
 
         }
 
         private void PrintPlayer()
         {
-            Console.SetCursorPosition(game.Player.GetPos().x, game.Player.GetPos().y);
+            Console.SetCursorPosition(game.Player.GetPos().x, game.Player.GetPos().y + 1);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("P");
             Console.ResetColor();
@@ -276,7 +276,7 @@ namespace GeometryFarm.Scenes
                     break;
                 case ConsoleKey.E:
                     sb.Clear();
-                    usingSmithy = true;
+                    usingSmithy = isAroundKeeper();
                     sb.Append(game.Player.Interection((ShopTileType)map[game.Player.GetPos().y, game.Player.GetPos().x]));
                     break;
             }
@@ -302,6 +302,15 @@ namespace GeometryFarm.Scenes
                 game.ChangeScene(SceneType.Town);
                 game.Player.SetPos(9, 13);
             }
+        }
+
+        private bool isAroundKeeper()
+        {
+            if ((ShopTileType)map[game.Player.GetPos().y, game.Player.GetPos().x] == ShopTileType.InterectionPlace)
+            {
+                return true;
+            }
+            return false;
         }
         #endregion
 

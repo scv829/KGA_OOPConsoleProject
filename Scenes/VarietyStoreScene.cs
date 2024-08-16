@@ -41,9 +41,10 @@ namespace GeometryFarm.Scenes
                     { 1, 1, 1, 1, 1, 1, 1, 1, 0, 0 },
             };
 
-            itemList = new Item[2];
-            itemList[0] = CropFactory.Instantiate("네모");
-            itemList[1] = SeedFactory.Instantiate("네모");
+            itemList = new Item[3];
+            itemList[0] = SeedFactory.Instantiate("원형");
+            itemList[1] = SeedFactory.Instantiate("세모");
+            itemList[2] = SeedFactory.Instantiate("네모");
         }
 
         public override void Enter()
@@ -86,13 +87,14 @@ namespace GeometryFarm.Scenes
                 }
   
             }
-            Console.SetCursorPosition(0, 20);
+            Console.SetCursorPosition(0, 25);
             Console.WriteLine(sb.ToString());
 
         }
 
         private void PrintMap()
         {
+            Console.WriteLine("=====================잡화점======================");
             Console.CursorVisible = false;
             for (int y = 0; y < map.GetLength(0); y++)
             {
@@ -129,7 +131,7 @@ namespace GeometryFarm.Scenes
 
         private void PrintPlayer()
         {
-            Console.SetCursorPosition(game.Player.GetPos().x, game.Player.GetPos().y);
+            Console.SetCursorPosition(game.Player.GetPos().x, game.Player.GetPos().y + 1);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("P");
             Console.ResetColor();
@@ -241,7 +243,7 @@ namespace GeometryFarm.Scenes
                     break;
                 case ConsoleKey.E:
                     sb.Clear();
-                    usingStore = true;
+                    usingStore = isAroundKeeper();
                     break;
             }
             CheckPlayerPos();
@@ -272,6 +274,18 @@ namespace GeometryFarm.Scenes
                         break;
                     case ConsoleKey.D2:
                     case ConsoleKey.NumPad2:
+                        if (!game.Player.inventory.isInventoryFull() && game.Player.gold >= itemList[1].price)
+                        {
+                            game.Player.BuyItem(itemList[1]);
+                            sb.Append($"{itemList[1].name}을 구매했습니다!");
+                        }
+                        else
+                        {
+                            sb.Append("잔액 혹은 인벤토리 자리가 부족합니다.");
+                        }
+                        break;
+                    case ConsoleKey.D3:
+                    case ConsoleKey.NumPad3:
                         if (!game.Player.inventory.isInventoryFull() && game.Player.gold >= itemList[1].price)
                         {
                             game.Player.BuyItem(itemList[1]);
@@ -336,6 +350,16 @@ namespace GeometryFarm.Scenes
                 game.ChangeScene(SceneType.Town);
                 game.Player.SetPos(5, 12);
             }
+
+        }
+
+        private bool isAroundKeeper()
+        {
+            if ((ShopTileType)map[game.Player.GetPos().y, game.Player.GetPos().x] == ShopTileType.InterectionPlace)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
