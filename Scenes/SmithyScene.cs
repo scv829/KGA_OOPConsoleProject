@@ -1,8 +1,13 @@
 ﻿using GeometryFarm.Enums;
+using GeometryFarm.Items;
 using GeometryFarm.Util;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,12 +18,27 @@ namespace GeometryFarm.Scenes
         int[,] map;
         private ConsoleKey input;
 
+        private bool usingSmithy;
+        private bool usingUpgrade;
+
+        private Pos selectTool;
+        private List<Pos> itemList;
+        private bool isUpgradable;
+
+
         // 테스트 용 sb
         private StringBuilder sb;
 
         public SmithyScene(Game game) : base(game)
         {
             sb = new StringBuilder();
+
+            usingSmithy = false;
+            usingUpgrade = false;
+            isUpgradable = false;
+            selectTool = new Pos(-1, -1);
+            itemList = new List<Pos>();
+
             map = new int[7, 10]
                 {
                     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
@@ -43,15 +63,29 @@ namespace GeometryFarm.Scenes
 
         public override void Input()
         {
-            input = Console.ReadKey().Key;
+            if(!usingSmithy) input = Console.ReadKey().Key;
         }
 
         public override void Render()
         {
-            PrintMap();
-            PrintPlayer();
+            Console.Clear();
+            if (usingUpgrade)
+            {
+                PrintUpgrade();
+            }
+            else if(usingSmithy)
+            {
+                PrintSmithy();
+            }
+            else
+            {
+                PrintMap();
+                PrintPlayer();
+                if (game.Player.inventory.isUsingInventory) game.Player.inventory.ShowInventory();
+            }
         }
 
+        #region 맵 내에서 이동[Render]
         private void PrintMap()
         {
             Console.SetCursorPosition(0, 0);
@@ -120,11 +154,109 @@ namespace GeometryFarm.Scenes
                 Console.Write("─");
             }
         }
+        #endregion
 
+        #region 대장간 이용 [Render]
+        private void PrintSmithy()
+        {
+            itemList = game.Player.inventory.FindItemsByIUpgrade();
+
+            Console.WriteLine("=====================대장간======================");
+            for (int index = 0; index < itemList.Count; index++)
+            {
+                Item item = game.Player.inventory.FindItemByPos(itemList[index]).Item1;
+                Console.WriteLine(" ┌─────────────────────────────────────────────┐");
+                item.PrintImage();
+                Console.WriteLine($"  {index + 1,2}.\t이름 : {item.name}");
+                Console.WriteLine($"    \t가격 : {item.price}G");
+                Console.WriteLine($"    \t설명 : {item.description}");
+                Console.WriteLine(" └─────────────────────────────────────────────┘");
+            }
+
+            Console.WriteLine($"=========장비 선택(1~{itemList.Count}) || 나가기 (0)========");
+            Console.Write("선택한 번호 : ");
+        }
+        #endregion
+
+        #region 업그레이드 이용 [Render]
+        private void PrintUpgrade()
+        {
+            Item item = game.Player.inventory.FindItemByPos(selectTool).Item1;
+
+
+            Console.WriteLine("===================== 대장간[업그레이드] ======================");
+
+            if (item is GrowingTool)
+            {
+                GrowingTool tool = (GrowingTool)item;
+
+                PrintSpec(tool);
+
+                Console.WriteLine("\t\t\t↓↓");
+                Console.WriteLine("\t\t\t↓↓");
+                Console.WriteLine("\t\t\t↓↓");
+
+                PrintSpec(GrowingToolFactory.Instantiate(tool.ToolRank + 1));
+
+                if(tool.hasNext() && tool.CheckIngredient(game.Player.gold, game.Player.inventory).Contains(false))
+                {
+                    isUpgradable = false;
+                }
+                else
+                {
+                    isUpgradable = true;
+                }
+
+            }
+
+            if(isUpgradable)
+            {
+                Console.WriteLine("=============    업그레이드 하기(1)     || 뒤로 가기(0)============");
+            }
+            else
+            {
+                Console.WriteLine("===========업그레이드 불가[재료 불충분] || 뒤로 가기(0)============");
+            }
+            Console.Write("선택 : ");
+
+        }
+
+        private void PrintSpec(GrowingTool tool)
+        {
+            Console.WriteLine(" ┌─────────────────────────────────────────────┐");
+            if (tool == null) { Console.WriteLine("\n\n\t\t\t없음\n\n"); }
+            else
+            {
+                Console.WriteLine($"    \t이름 : {tool.name}");
+                Console.Write("  "); tool.PrintImage();
+                Console.WriteLine($"    \t효과 : {tool.Effect}");
+                Console.WriteLine($"    \t설명 : {tool.description}");
+            }
+            Console.WriteLine(" └─────────────────────────────────────────────┘");
+        }
+
+        #endregion
 
         public override void Update()
         {
-            // 해당 키를 입력받은 곳으로 이동하기 
+            if(usingUpgrade)        // 업그레이드 이용
+            {
+                InputUpgradeTool();
+            }
+            else if(usingSmithy)    // 대장간 이용
+            {
+                InputSelectTool();
+            }
+            else                    // 대장간 맵 이용
+            {
+                if (game.Player.inventory.isUsingInventory) game.Player.inventory.Input(input);
+                else InputMove();
+            }
+        }
+
+        #region 맵 내에서 이동[Input]
+        private void InputMove()
+        {
             switch (input)
             {
                 case ConsoleKey.UpArrow:
@@ -139,8 +271,12 @@ namespace GeometryFarm.Scenes
                 case ConsoleKey.LeftArrow:
                     Move(-1, 0);
                     break;
+                case ConsoleKey.I:
+                    game.Player.inventory.OpenInventory();
+                    break;
                 case ConsoleKey.E:
                     sb.Clear();
+                    usingSmithy = true;
                     sb.Append(game.Player.Interection((ShopTileType)map[game.Player.GetPos().y, game.Player.GetPos().x]));
                     break;
             }
@@ -167,5 +303,51 @@ namespace GeometryFarm.Scenes
                 game.Player.SetPos(4, 1);
             }
         }
+        #endregion
+
+        #region 대장간 이용[Input]
+        private void InputSelectTool()
+        { 
+            if(int.TryParse(Console.ReadLine(), out int N))
+            {
+                if (N == 0)
+                {
+                    usingSmithy = false;
+                }
+                else if ( 0 < N && N <= itemList.Count) 
+                {
+                    selectTool = itemList[N-1];
+                    usingUpgrade = true;
+                    usingSmithy = false;
+                }
+            }
+
+        }
+        #endregion
+
+        #region 업그레이드 이용[Input]
+        private void InputUpgradeTool()
+        {
+            switch (input)
+            {
+                case ConsoleKey.D0:
+                case ConsoleKey.NumPad0:
+                    usingUpgrade = false;
+                    usingSmithy = true;
+                    break;
+                case ConsoleKey.D1:
+                case ConsoleKey.NumPad1:
+                    // Upgrade 로직
+                    if (isUpgradable)
+                    {
+                        game.Player.inventory.UpgradeItemByPos(selectTool);
+                    }
+                    break;
+            }
+
+        }
+        #endregion
+
+
     }
 }
