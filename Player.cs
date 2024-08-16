@@ -7,84 +7,40 @@ namespace GeometryFarm
 {
     public class Player
     {
+        public Inventory inventory;
+        private string name;
+        private Pos playerPos;
 
-        private Item[] inventory;
         public int gold { get; private set; }
         public int fatigue { get; private set; }
-        private string name;
-        private int inventoryIndex;
-        private Pos playerPos;
-        public int currentUsing { get; private set; }
 
 
         public Player(string name)
         {
+            this.inventory = new Inventory();
             this.name = name;
-            this.inventory = new Item[6];
             this.gold = 3000;
             this.fatigue = 0;
-            this.inventoryIndex = 1;
             this.playerPos = new Pos();
-            this.currentUsing = 1;
 
-
-            inventory[0] = GrowingToolFactory.Instantiate("물뿌리개");
-            inventory[1] = GrowingToolFactory.Instantiate("구리 물뿌리개");
-            inventory[2] = SeedFactory.Instantiate("원형");
-        }
-
-        public bool isInventoryFull()
-        {
-            return inventoryIndex >= inventory.Length;
         }
 
         public void BuyItem(Item item)
         {
-            int index = CheckEmpty();
-            inventory[index] = item;
-            inventoryIndex++;
+            inventory.InsertItem(item);
             gold -= item.price;
         }
 
-        public bool SellItem()
+        public bool SellItem(int sellCount)
         {
-            if( 0 < currentUsing && currentUsing <= inventory.Length )
+            if(1 <= sellCount && sellCount <= inventory.GetHodingCurrentItemCount())
             {
-                if(inventory[currentUsing - 1] != null)
-                {
-                    gold += inventory[currentUsing - 1].price;
-                    inventory[currentUsing - 1] = null;
-                    inventoryIndex--;
-                    return true;
-                }
+                gold += (inventory.GetHodingCurrentItem().price * sellCount);
+                inventory.ConsumptionItem(sellCount);
+                return true;
             }
+
             return false;
-        }
-
-        public void ChangeCurrentUsing(int index)
-        {
-            this.currentUsing = index;
-        }
-
-        public void ShowItem(int y = 15)
-        {
-            
-            for(int slot = 0; slot < inventory.Length; slot++)
-            {
-                if (slot + 1 == currentUsing)
-                {
-                    Console.ForegroundColor = ConsoleColor.Blue;  
-                }
-                Console.SetCursorPosition(0 + slot * 6, y );
-                Console.Write(" ┌──┐ ");
-                Console.SetCursorPosition(0 + slot * 6, y+1);
-                Console.Write($" │{inventory[slot]?.GetType().Name[0],-2}│ ");
-                Console.SetCursorPosition(0 + slot * 6, y+2);
-                Console.Write(" └──┘ ");
-                Console.ResetColor();
-            }
-
-     
         }
 
         /// <summary>
@@ -98,7 +54,7 @@ namespace GeometryFarm
         /// </summary>
         /// <param name="x">x위치</param>
         /// <param name="y">y위치</param>
-        public void SetPos(int x, int y) { this.playerPos.setPos(x, y); }
+        public void SetPos(int x, int y) { this.playerPos.SetPos(x, y); }
 
         /// <summary>
         /// 맵과 상호작용 하는 메서드
@@ -128,13 +84,16 @@ namespace GeometryFarm
             switch (type)
             {
                 case FarmTileType.Ground:
+                    if (inventory.GetHodingCurrentItem() is FarmingTool) return "땅을 경작합니다.";
                     return "땅을 한번 만져봅니다";
                 case FarmTileType.Field:
+                    if (inventory.GetHodingCurrentItem() is Seed) return "씨앗을 심습니다.";
                     return "밭을 바라봅니다";
                 case FarmTileType.Crop:
                     return "농작물을 수확합니다";
                 case FarmTileType.Seed:
-                    return "씨앗에 물을줍니다";
+                    if (inventory.GetHodingCurrentItem() is GrowingTool) return "씨앗에 물을 줍니다.";
+                        return "씨앗을 확인합니다";
                 default:
                     return "";
             }
@@ -142,11 +101,12 @@ namespace GeometryFarm
 
         public bool MakingField()
         {
-            // Todo
             // 만약 내가 경작 도구를 가지고 있다?
-            // return true;
+            if (inventory.GetHodingCurrentItem() is FarmingTool)
+            {
+                return true;
+            }
             // 아니다 false
-
             return false;
         }
 
@@ -154,11 +114,10 @@ namespace GeometryFarm
         {
             // 만약 내가 씨앗을 들고 있다면
             // return true 하고 item에 seed 넣기
-            if ( inventory[currentUsing - 1] is Seed )
+            if (inventory.GetHodingCurrentItem() is Seed )
             {
-                inventoryIndex--;
-                seed = inventory[currentUsing - 1];
-                inventory[currentUsing - 1] = null;
+                seed = inventory.GetHodingCurrentItem();
+                inventory.ConsumptionItem();
                 return true;
             }
 
@@ -170,10 +129,10 @@ namespace GeometryFarm
         public Item WateringSeed(Seed seed)
         {
             // 만약 내가 물뿌리개를 들고 있다면
-            if (inventory[currentUsing-1] is GrowingTool)
+            if (inventory.GetHodingCurrentItem() is GrowingTool)
             {
                 // seed에 물뿌리개의 효과만큼 성장시키기
-                GrowingTool tool = (GrowingTool)inventory[currentUsing-1];
+                GrowingTool tool = (GrowingTool)inventory.GetHodingCurrentItem();
                 tool.Grow(seed);
                 // 만약 seed가 성장 수치를 다 채웠으면
                 if (seed.isGrew)
@@ -189,27 +148,10 @@ namespace GeometryFarm
         public void harvestingCrop(Crop crop)
         {
             // 인벤토리에 넣을 때 비어 있는지 확인
-            int index = CheckEmpty();
-
             // 해당 농작물을 수확하고 인벤토리에 넣는다
-            inventory[index] = crop;
-            inventoryIndex++;
+            inventory.InsertItem(crop);
+
         }
-
-
-        private int CheckEmpty()
-        {
-            for (int i = 0; i < inventory.Length; i++)
-            {
-                if (inventory[i] == null)
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-
 
         private string ShopInterection(ShopTileType type)
         {

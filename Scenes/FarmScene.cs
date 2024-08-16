@@ -20,9 +20,8 @@ namespace GeometryFarm.Scenes
 
             Console.CursorVisible = false;
 
-            Crop crop = new Crop("네모", 1000, "네모 농작물");
-            Seed seed = new Seed("네모의 씨앗", 50, "네모 농작물의 씨앗");
-            seed.SetParent(crop);
+            Crop crop = CropFactory.Instantiate("원형");
+            Seed seed = SeedFactory.Instantiate("원형");
 
             map = new (int, Item)[6, 6]
             {
@@ -57,7 +56,11 @@ namespace GeometryFarm.Scenes
         {
             PrintMap();
             PrintPlayer();
-            game.Player.ShowItem();
+            game.Player.inventory.ShowQuickSlot();
+            if (game.Player.inventory.isUsingInventory)
+            {
+                game.Player.inventory.ShowInventory();
+            }
         }
 
         private void PrintMap()
@@ -80,10 +83,11 @@ namespace GeometryFarm.Scenes
                             Console.Write($"F");
                             break;
                         case FarmTileType.Crop:
-                            Console.Write($"C");
+                            Crop crop = map[y, x].Item2 as Crop;
+                            crop.PrintImage();
                             break;
                         case FarmTileType.Seed:
-                            Console.Write($"S");
+                            map[y, x].Item2.PrintImage();
                             break;
                         case FarmTileType.Portal:
                             Console.ForegroundColor = ConsoleColor.Blue;
@@ -133,6 +137,18 @@ namespace GeometryFarm.Scenes
 
         public override void Update()
         {
+            if (game.Player.inventory.isUsingInventory)
+            {
+                game.Player.inventory.Input(input);
+            }
+            else
+            {
+                InputMove();
+            }
+        }
+
+        private void InputMove()
+        {
             // 해당 키를 입력받은 곳으로 이동하기 
             switch (input)
             {
@@ -150,27 +166,30 @@ namespace GeometryFarm.Scenes
                     break;
                 case ConsoleKey.D1:
                 case ConsoleKey.NumPad1:
-                    game.Player.ChangeCurrentUsing(1);
+                    game.Player.inventory.SetCurrentUsing(0);
                     break;
                 case ConsoleKey.D2:
                 case ConsoleKey.NumPad2:
-                    game.Player.ChangeCurrentUsing(2);
+                    game.Player.inventory.SetCurrentUsing(1);
                     break;
                 case ConsoleKey.D3:
                 case ConsoleKey.NumPad3:
-                    game.Player.ChangeCurrentUsing(3);
+                    game.Player.inventory.SetCurrentUsing(2);
                     break;
                 case ConsoleKey.D4:
                 case ConsoleKey.NumPad4:
-                    game.Player.ChangeCurrentUsing(4);
+                    game.Player.inventory.SetCurrentUsing(3);
                     break;
                 case ConsoleKey.D5:
                 case ConsoleKey.NumPad5:
-                    game.Player.ChangeCurrentUsing(5);
+                    game.Player.inventory.SetCurrentUsing(4);
                     break;
                 case ConsoleKey.D6:
                 case ConsoleKey.NumPad6:
-                    game.Player.ChangeCurrentUsing(6);
+                    game.Player.inventory.SetCurrentUsing(5);
+                    break;
+                case ConsoleKey.I:
+                    game.Player.inventory.OpenInventory();
                     break;
                 case ConsoleKey.E:
                     sb.Clear();
@@ -198,7 +217,7 @@ namespace GeometryFarm.Scenes
                     tile.Item1 = (tile.Item2 is Crop) ? (int)FarmTileType.Crop : (int)FarmTileType.Seed; 
                     break;
                 case FarmTileType.Crop:
-                    if (!game.Player.isInventoryFull())
+                    if (!game.Player.inventory.isInventoryFull())
                     {
                         game.Player.harvestingCrop(tile.Item2 as Crop);
                         tile.Item2 = null;
@@ -222,8 +241,8 @@ namespace GeometryFarm.Scenes
         {
             if ((FarmTileType)map[game.Player.GetPos().y, game.Player.GetPos().x].Item1 == FarmTileType.Portal)
             {
-                game.ChangeScene(SceneType.Smithy);
-                game.Player.SetPos(7, 5);
+                game.ChangeScene(SceneType.VarietyStore);
+                game.Player.SetPos(3, 5);
             }
 
         }

@@ -1,6 +1,9 @@
 ﻿using GeometryFarm.Enums;
 using GeometryFarm.Items;
 using GeometryFarm.Util;
+using System;
+using System.Net.Security;
+using System.Numerics;
 using System.Text;
 
 namespace GeometryFarm.Scenes
@@ -12,14 +15,21 @@ namespace GeometryFarm.Scenes
         private bool usingStore;
 
         private Item[] itemList;
+        private int sellCount;
+
+        private bool selectSellItem;
+        private bool isSell;
 
         // 테스트 용 sb
         private StringBuilder sb;
 
         public VarietyStoreScene(Game game) : base(game)
         {
+            selectSellItem = false;
             usingStore = false;
+            isSell = false;
             sb = new StringBuilder();
+            sellCount = -1;
             map = new int[7, 15]
             {
                     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
@@ -48,7 +58,7 @@ namespace GeometryFarm.Scenes
 
         public override void Input()
         {
-            input = Console.ReadKey().Key;
+            input = Console.ReadKey(true).Key;
         }
 
         public override void Render()
@@ -56,12 +66,25 @@ namespace GeometryFarm.Scenes
             Console.Clear();
             if (usingStore)
             {
-                PrintShop();
+                if (game.Player.inventory.isUsingInventory)
+                {
+                    game.Player.inventory.ShowInventory();
+                }
+                else if (selectSellItem == true) { PrintSell(); }
+                else
+                {
+                    PrintShop();
+                }
             }
             else
             {
                 PrintMap();
                 PrintPlayer();
+                if (game.Player.inventory.isUsingInventory)
+                {
+                    game.Player.inventory.ShowInventory();
+                }
+  
             }
             Console.SetCursorPosition(0, 20);
             Console.WriteLine(sb.ToString());
@@ -114,7 +137,7 @@ namespace GeometryFarm.Scenes
 
         private void PrintShop()
         {
-            Console.WriteLine("=====================잡화점======================");
+            Console.WriteLine("=====================잡화점[구매]======================");
             for (int index = 0; index < itemList.Length; index++)
             {
                 Console.WriteLine(" ┌─────────────────────────────────────────────┐");
@@ -125,13 +148,30 @@ namespace GeometryFarm.Scenes
             }
             Console.CursorVisible = true;
 
-            
-            game.Player.ShowItem(Console.GetCursorPosition().Top);
             Console.WriteLine($"\n\n\n소지금 : {game.Player.gold}G");
-            Console.WriteLine("=========물건 구매(각 번호) || 나가기 (0)========");
+            Console.WriteLine("=========물건 구매(각 번호) || 판매 전환 (E) || 나가기 (0)========");
+            Console.Write("선택한 번호 : ");
+        }
+
+        private void PrintSell()
+        {
+            
+
+            Item item = game.Player.inventory.GetHodingCurrentItem();
+            int count = game.Player.inventory.GetHodingCurrentItemCount();
+            Console.WriteLine("=====================잡화점[판매]======================");
+            Console.WriteLine(" ┌─────────────────────────────────────────────┐");
+            Console.WriteLine($"    \t이름 : {item.name}");
+            Console.WriteLine($"    \t가격 : {item.price}G");
+            Console.WriteLine($"    \t설명 : {item.description}");
+            Console.WriteLine($"    \t수량 : {count}");
+            Console.WriteLine(" └─────────────────────────────────────────────┘");
+
+            Console.WriteLine($"=========물건 판매(E) || 구매 전환 (0)========");
             Console.Write("선택한 번호 : ");
 
         }
+
 
         private void PrintFence(int x, int y)
         {
@@ -160,11 +200,23 @@ namespace GeometryFarm.Scenes
 
             if (usingStore)
             {
-                InputStore();
+                if (game.Player.inventory.isUsingInventory) 
+                {
+                    selectSellItem = game.Player.inventory.SellInput(input); // 아이템 팔기 선택
+                }
+                else if(selectSellItem)
+                {
+                    SellInput();
+                }
+                else InputStore();
             }
             else
             {
-                InputMove();
+                if (game.Player.inventory.isUsingInventory)
+                {
+                    game.Player.inventory.Input(input);
+                }
+                else InputMove();
             }
         }
 
@@ -184,10 +236,12 @@ namespace GeometryFarm.Scenes
                 case ConsoleKey.LeftArrow:
                     Move(-1, 0);
                     break;
+                case ConsoleKey.I:
+                    game.Player.inventory.OpenInventory();
+                    break;
                 case ConsoleKey.E:
                     sb.Clear();
                     usingStore = true;
-                    game.Player.ChangeCurrentUsing(1);
                     break;
             }
             CheckPlayerPos();
@@ -195,68 +249,71 @@ namespace GeometryFarm.Scenes
 
         private void InputStore()
         {
+            
             sb.Clear();
+            {
+                switch (input)
+                {
+                    case ConsoleKey.D0:
+                    case ConsoleKey.NumPad0:
+                        usingStore = false;
+                        break;
+                    case ConsoleKey.D1:
+                    case ConsoleKey.NumPad1:
+                        if (!game.Player.inventory.isInventoryFull() && game.Player.gold >= itemList[0].price)
+                        {
+                            game.Player.BuyItem(itemList[0]);
+                            sb.Append($"{itemList[0].name}을 구매했습니다!");
+                        }
+                        else
+                        {
+                            sb.Append("잔액 혹은 인벤토리 자리가 부족합니다.");
+                        }
+                        break;
+                    case ConsoleKey.D2:
+                    case ConsoleKey.NumPad2:
+                        if (!game.Player.inventory.isInventoryFull() && game.Player.gold >= itemList[1].price)
+                        {
+                            game.Player.BuyItem(itemList[1]);
+                            sb.Append($"{itemList[1].name}을 구매했습니다!");
+                        }
+                        else
+                        {
+                            sb.Append("잔액 혹은 인벤토리 자리가 부족합니다.");
+                        }
+                        break;
+                    case ConsoleKey.E:
+                        sb.Clear();
+                            // 인벤토리 열기
+                            game.Player.inventory.OpenInventory();
+                            game.Player.inventory.SetMessage("E : 아이템 판매");
+                        break;
+                }
+            }
+        }
+
+        private void SellInput()
+        {
             switch (input)
             {
                 case ConsoleKey.D0:
                 case ConsoleKey.NumPad0:
-                    usingStore = false;
-                    sb.Append($"상인과의 대화를 마무리 합니다.");
-                    break;
-                case ConsoleKey.D1:
-                case ConsoleKey.NumPad1:
-                    if (!game.Player.isInventoryFull() && game.Player.gold >= itemList[0].price)
-                    {
-                        game.Player.BuyItem(itemList[0]);
-                        sb.Append($"{itemList[0].name}을 구매했습니다!");
-                    }
-                    else
-                    {
-                        sb.Append("잔액 혹은 인벤토리 자리가 부족합니다.");
-                    }
-                    break;
-                case ConsoleKey.D2:
-                case ConsoleKey.NumPad2:
-                    if (!game.Player.isInventoryFull() && game.Player.gold >= itemList[1].price)
-                    {
-                        game.Player.BuyItem(itemList[1]);
-                        sb.Append($"{itemList[1].name}을 구매했습니다!");
-                    }
-                    else
-                    {
-                        sb.Append("잔액 혹은 인벤토리 자리가 부족합니다.");
-                    }
-                    break;
-                case ConsoleKey.LeftArrow:
-                    if(game.Player.currentUsing - 1 <= 1)
-                    {
-                        game.Player.ChangeCurrentUsing(1);
-                    }
-                    else
-                    {
-                        game.Player.ChangeCurrentUsing(game.Player.currentUsing - 1);
-                    }
-                    break;
-                case ConsoleKey.RightArrow:
-                    if (game.Player.currentUsing + 1 >= 6)
-                    {
-                        game.Player.ChangeCurrentUsing(6);
-                    }
-                    else
-                    {
-                        game.Player.ChangeCurrentUsing(game.Player.currentUsing + 1);
-                    }
+                    selectSellItem = false;
                     break;
                 case ConsoleKey.E:
                     sb.Clear();
-                    if (game.Player.SellItem())
+                    Console.WriteLine($"판매할 수량을 적어주세요[1 ~ {game.Player.inventory.GetHodingCurrentItemCount()}] : ");
+
+                    int.TryParse(Console.ReadLine(), out sellCount);
+                    if(game.Player.SellItem(sellCount))
                     {
-                        sb.Append("아이템을 팔았습니다!");
+                        sb.Append("아이템을 판매했습니다!");
                     }
                     else
                     {
-                        sb.Append("팔 아이템이 없습니다.");
+                        sb.Append("수량 혹은 아이템이 없습니다.");
                     }
+                    selectSellItem = false;
                     break;
             }
         }

@@ -24,22 +24,25 @@ namespace GeometryFarm.Util
 
         public Pos currentUsing { get; private set; }
 
-        private bool isUsingInventory;
+        public bool isUsingInventory { get; private set; }
 
         private bool isChanging;
 
         private int startX = 70;
 
+        private StringBuilder sb;
+
         public Inventory()
         {
             MAX = new Pos(6, 6);
             items = new (Item, int)[ MAX.y , MAX.x ];
-            itemPos = new Pos(0, 0);
+            itemPos = new Pos(-1, -1);
 
             isUsingInventory = false;
             inventoryIndex = 0;
-            currentUsing = new Pos(5, 0);
+            currentUsing = new Pos(0, 0);
             isChanging = false;
+            sb = new StringBuilder();
 
             InsertItem(GrowingToolFactory.Instantiate(ToolRankType.Normal));
             InsertItem(GrowingToolFactory.Instantiate(ToolRankType.Copper));
@@ -53,6 +56,7 @@ namespace GeometryFarm.Util
             {
                 Pos pos = CheckEmptyIndex();
                 items[pos.y ,pos.x] = (item, count);
+                inventoryIndex++;
             }
         }
 
@@ -60,6 +64,7 @@ namespace GeometryFarm.Util
         {
             items[current.y, current.x].Item1 = null;
             items[current.y, current.x].Item2 = 0;
+            inventoryIndex--;
         }
 
         public void ExchangeItem(Pos current, Pos next)
@@ -68,7 +73,9 @@ namespace GeometryFarm.Util
             items[current.y ,current.x] = items[next.y ,next.x];
             items[next.y ,next.x] = temp;
 
+            itemPos = new Pos(-1, -1);
             isChanging = false;
+            SetMessage("C : 아이템 위치 변경 / I : 인벤토리 닫기 / D : 아이템 삭제");
         }
 
         public void ShowItemInfo(Pos pos)
@@ -97,12 +104,15 @@ namespace GeometryFarm.Util
                 Console.SetCursorPosition(startX, Console.GetCursorPosition().Top + 1);
                 Console.Write(" ─────────────────────────────────────────────");
             }
+            Console.SetCursorPosition(startX, Console.GetCursorPosition().Top + 1);
+            Console.Write(sb.ToString());
+
         }
 
         public void ShowInventory()
         {
             Console.SetCursorPosition(startX , 0);
-            Console.Write("=====================인벤토리======================");
+            Console.Write("====================인벤토리====================");
             int xPos = 0, yPos = 0;
 
             for (int y = 0; y < items.GetLength(0); y++)
@@ -115,7 +125,7 @@ namespace GeometryFarm.Util
                     {
                         Console.ForegroundColor = ConsoleColor.Blue;
                     }
-                    if(currentUsing.Equals(itemPos) && isChanging)
+                    if(itemPos.IsEqual(x,y))
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                     }
@@ -139,7 +149,7 @@ namespace GeometryFarm.Util
                 if (y == 0) 
                 { 
                     Console.SetCursorPosition(startX , 5);
-                    Console.Write("──────────────∧ 퀵 슬롯 || 인벤토리 ∨──────────────"); 
+                    Console.Write("────────────∧ 퀵 슬롯 || 인벤토리 ∨───────────"); 
                 }
             }
 
@@ -147,12 +157,12 @@ namespace GeometryFarm.Util
             ShowItemInfo(currentUsing);
         }
 
-        // 아이템 박스를 미리 그리자
+   
         public void ShowQuickSlot(int y = 15)
         {
             for (int slot = 0; slot < 6; slot++)
             {
-                if (slot + 1 == currentUsing.x)
+                if (slot == currentUsing.x && currentUsing.y == 0)
                 {
                     Console.ForegroundColor = ConsoleColor.Blue;
                 }
@@ -185,13 +195,18 @@ namespace GeometryFarm.Util
         }
 
         // 현재 인덱스 부분
-        public void ChangeCurrentUsing(int x, int y = 0)
+        public void ChangeCurrentUsing(int x, int y)
         {
             if( 0 <= currentUsing.x + x && currentUsing.x + x < items.GetLength(1) &&
                 0 <= currentUsing.y + y && currentUsing.y + y < items.GetLength(0) )
             {
-                this.currentUsing.SetPos(currentUsing.x + x, currentUsing.y + y);
+                currentUsing = new Pos(currentUsing.x + x, currentUsing.y + y);
             }
+        }
+
+        public void SetCurrentUsing(int index)
+        {
+            currentUsing = new Pos(index, 0);
         }
 
         /// <summary>
@@ -214,12 +229,12 @@ namespace GeometryFarm.Util
             return new Pos(-1, -1);
         }
 
-        public bool Input(ConsoleKey input)
+        public void Input(ConsoleKey input)
         {
             switch (input)
             {
                 case ConsoleKey.UpArrow:
-                    ChangeCurrentUsing(1, 0);
+                    ChangeCurrentUsing(0, -1);
                     break;
                 case ConsoleKey.DownArrow:
                     ChangeCurrentUsing(0, 1);
@@ -232,16 +247,16 @@ namespace GeometryFarm.Util
                     break;
                 case ConsoleKey.I:
                     isUsingInventory = false;
-                    break;
-                case ConsoleKey.E:
+                    Console.Clear();
                     break;
                 case ConsoleKey.C:
                     // C를 눌렀어
                     if(!isChanging)
                     {
-                        // c를 누른 위치를 기억하고 Change 한다고 알려줘
+                        // C를 누른 위치를 기억하고 Change 한다고 알려줘
                         itemPos = currentUsing;
                         isChanging = true;
+                        SetMessage("변경할 위치로 이동해서 C 를 눌러주세요");
                     }
                     // C를 한번 더 눌러
                     else
@@ -254,8 +269,65 @@ namespace GeometryFarm.Util
                     RemoveItem(currentUsing);
                     break;
             }
+        }
 
-            return isUsingInventory;
+        public bool SellInput(ConsoleKey input)
+        {
+            switch (input)
+            {
+                case ConsoleKey.UpArrow:
+                    ChangeCurrentUsing(0, -1);
+                    break;
+                case ConsoleKey.DownArrow:
+                    ChangeCurrentUsing(0, 1);
+                    break;
+                case ConsoleKey.RightArrow:
+                    ChangeCurrentUsing(1, 0);
+                    break;
+                case ConsoleKey.LeftArrow:
+                    ChangeCurrentUsing(-1, 0);
+                    break;
+                case ConsoleKey.I:
+                    isUsingInventory = false;
+                    Console.Clear();
+                    break;
+                case ConsoleKey.E:
+                    isUsingInventory = false;
+                    return true;
+            }
+            return false;
+        }
+
+        public void OpenInventory()
+        {
+            isUsingInventory = true;
+            currentUsing.SetPos(0, 0);
+            SetMessage("C : 아이템 위치 변경 / I : 인벤토리 닫기 / D : 아이템 삭제");
+        }
+
+        public Item GetHodingCurrentItem()
+        {
+            return items[currentUsing.y, currentUsing.x].Item1;
+        }
+
+        public int GetHodingCurrentItemCount()
+        {
+            return items[currentUsing.y, currentUsing.x].Item2;
+        }
+
+        public void ConsumptionItem(int count = 1)
+        {
+            items[currentUsing.y, currentUsing.x].Item2 -= count;
+            if(items[currentUsing.y, currentUsing.x].Item2 == 0)
+            {
+                RemoveItem(currentUsing);
+            }
+        }
+
+        public void SetMessage(string msg)
+        {
+            sb.Clear();
+            sb.Append(msg);
         }
     }
 }
