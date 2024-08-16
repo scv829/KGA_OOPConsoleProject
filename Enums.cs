@@ -22,11 +22,12 @@
     /// Field = 밭
     /// Crop = 농작물
     /// Seed = 씨앗
+    /// Water = 강물
     /// Portal = 맵 이동
     /// </summary>
     public enum FarmTileType
     {
-        Ground, Fence, Field, Seed, Crop, Portal
+        Ground, Fence, Field, Seed, Crop, Water, Portal
     }
 
     public enum ShopTileType
