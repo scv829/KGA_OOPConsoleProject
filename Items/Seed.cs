@@ -39,7 +39,7 @@ namespace GeometryFarm.Items
 
         public override void PrintImage()
         {
-            Console.Write($"{"S",2}");
+            Console.Write($"{"S", -2}");
         }
     }
 }

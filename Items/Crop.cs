@@ -22,7 +22,7 @@ namespace GeometryFarm.Items
 
         public override void PrintImage()
         {
-            Console.Write($"{shape,2}");
+            Console.Write($"{shape, -2}");
         }
     }
 }

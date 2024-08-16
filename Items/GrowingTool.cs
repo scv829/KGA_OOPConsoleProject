@@ -69,7 +69,7 @@ namespace GeometryFarm.Items
 
         public Item Upgrade(int upgradeGold, Inventory playerInventory)
         {
-            // 재료를 제거하는 로직
+            // 재료를 제거하는 로직 
             return GrowingToolFactory.Instantiate(toolRankType + 1);
         }
 
@@ -94,7 +94,7 @@ namespace GeometryFarm.Items
                     Console.BackgroundColor = ConsoleColor.DarkYellow;
                     break;
             }
-            Console.Write($"{"GT",2}");
+            Console.Write($"{"GT",-2}");
             Console.BackgroundColor = ConsoleColor.Black;
         }
     }
