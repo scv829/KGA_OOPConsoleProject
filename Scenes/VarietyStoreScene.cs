@@ -30,15 +30,15 @@ namespace GeometryFarm.Scenes
             isSell = false;
             sb = new StringBuilder();
             sellCount = -1;
-            map = new int[7, 15]
+            map = new int[7, 10]
             {
-                    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-                    { 1, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-                    { 1, 0, 3, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-                    { 1, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-                    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-                    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-                    { 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                    { 1, 1, 1, 1, 1, 1, 1, 1, 0, 0 },
+                    { 1, 0, 3, 3, 3, 0, 0, 1, 0, 0 },
+                    { 1, 0, 3, 2, 3, 0, 0, 1, 0, 0 },
+                    { 1, 0, 3, 3, 3, 0, 0, 1, 1, 1 },
+                    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 5 },
+                    { 1, 0, 0, 0, 0, 0, 0, 1, 1, 1 },
+                    { 1, 1, 1, 1, 1, 1, 1, 1, 0, 0 },
             };
 
             itemList = new Item[2];
@@ -333,8 +333,8 @@ namespace GeometryFarm.Scenes
         {
             if ((ShopTileType)map[game.Player.GetPos().y, game.Player.GetPos().x] == ShopTileType.Portal)
             {
-                game.ChangeScene(SceneType.Farm);
-                game.Player.SetPos(4, 1);
+                game.ChangeScene(SceneType.Town);
+                game.Player.SetPos(5, 12);
             }
         }
     }

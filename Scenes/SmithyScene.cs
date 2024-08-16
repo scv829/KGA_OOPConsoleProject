@@ -45,9 +45,9 @@ namespace GeometryFarm.Scenes
                     { 1, 3, 3, 0, 0, 0, 0, 0, 0, 1 },
                     { 1, 2, 3, 0, 0, 0, 0, 0, 0, 1 },
                     { 1, 3, 3, 0, 0, 0, 0, 0, 0, 1 },
-                    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-                    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-                    { 1, 1, 1, 1, 1, 1, 1, 5, 1, 1 },
+                    { 1, 1, 1, 1, 0, 0, 0, 0, 0, 1 },
+                    { 5, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
                 };
         }
 
@@ -299,8 +299,8 @@ namespace GeometryFarm.Scenes
         {
             if ((ShopTileType)map[game.Player.GetPos().y, game.Player.GetPos().x] == ShopTileType.Portal)
             {
-                game.ChangeScene(SceneType.Farm);
-                game.Player.SetPos(4, 1);
+                game.ChangeScene(SceneType.Town);
+                game.Player.SetPos(9, 13);
             }
         }
         #endregion
