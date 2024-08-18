@@ -15,13 +15,13 @@ namespace GeometryFarm.Items
             double rand = random.NextDouble();
             if (name == "네모")
             {
-                Seed seed = new Seed("네모 씨앗", 50, "네모 농산물의 씨앗입니다.", ItemType.Seed, 4);
+                Seed seed = new Seed("네모 씨앗", 100, "네모 농산물의 씨앗입니다.", ItemType.Seed, 4);
                 seed.Parent = (0.9 < rand) ? CropFactory.Instantiate("꽉찬 네모") : CropFactory.Instantiate("네모");
                 return seed;
             }
             else if (name == "세모")
             {
-                Seed seed = new Seed("세모 씨앗", 30, "세모 농산물의 씨앗입니다.", ItemType.Seed, 3);
+                Seed seed = new Seed("세모 씨앗", 50, "세모 농산물의 씨앗입니다.", ItemType.Seed, 3);
                 seed.Parent = (0.9 < rand) ? CropFactory.Instantiate("꽉찬 세모") : CropFactory.Instantiate("세모");
                 return seed;
             }

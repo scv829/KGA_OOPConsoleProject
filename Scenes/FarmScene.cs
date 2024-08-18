@@ -118,7 +118,7 @@ namespace GeometryFarm.Scenes
                 Console.WriteLine();
             }
 
-            Console.SetCursorPosition(0, 20);
+            Console.SetCursorPosition(0, 22);
             Console.WriteLine(sb.ToString());
 
         }
@@ -212,7 +212,7 @@ namespace GeometryFarm.Scenes
                     break;
                 case ConsoleKey.E:
                     sb.Clear();
-                    sb.Append(game.Player.Interection((FarmTileType)map[game.Player.GetPos().y, game.Player.GetPos().x].Item1));
+                    sb.Append($"{game.Player.Interection((FarmTileType)map[game.Player.GetPos().y, game.Player.GetPos().x].Item1), 25}");
                     CheckTile(ref map[game.Player.GetPos().y, game.Player.GetPos().x]);
                     break;
             }
